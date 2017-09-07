@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QtWidgets/QWidget>
 #include <QApplication>
+#include "diagramscene.h"
 
 class MainWindow : public QMainWindow
 {
@@ -15,6 +16,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    const int h = 600;
+    const int w = 960;
 
     QWidget *centralWidget;
 
@@ -41,7 +45,8 @@ public:
 
     QMenuBar *menuBar;
 
-    QGraphicsView *graphicsView;
+    DiagramScene *scene;
+    QGraphicsView *view;
 
 
     void setupUi();

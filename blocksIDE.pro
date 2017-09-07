@@ -12,8 +12,10 @@ TARGET = blocksIDE
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    diagramscene.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    diagramscene.h
 
 FORMS    +=

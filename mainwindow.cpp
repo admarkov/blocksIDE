@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "diagramscene.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -13,7 +13,7 @@ void MainWindow::setupUi()
     if (this->objectName().isEmpty())
         this->setObjectName(QStringLiteral("MainWindow"));
 
-    this->resize(760, 480);
+    this->setFixedSize(w, h);
 
     centralWidget = new QWidget(this);
     centralWidget->setObjectName(QStringLiteral("centralWidget"));
@@ -21,7 +21,7 @@ void MainWindow::setupUi()
 
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
-    menuBar->setGeometry(QRect(0, 0, 760, 25));
+    menuBar->setGeometry(QRect(0, 0, w, 25));
     menuFile = new QMenu(menuBar);
     menuFile->setObjectName(QStringLiteral("menuFile"));
     menuBar->addAction(menuFile->menuAction());
@@ -88,9 +88,13 @@ void MainWindow::setupUi()
     menuRun->addAction(menuRun_stop);
     menuRun_stop->setEnabled(false);
 
-    graphicsView = new QGraphicsView(centralWidget);
-    graphicsView->setObjectName(QStringLiteral("graphicsView"));
-    graphicsView->setGeometry(QRect(0, 0, 760, 455));
+    scene = new DiagramScene();
+    scene->setObjectName(QStringLiteral("scene"));
+    scene->setSceneRect(0, 0, w-10, h-27);
+    view = new QGraphicsView(centralWidget);
+    view->setObjectName(QStringLiteral("view"));
+    view->setGeometry(QRect(0, 0, w, h-25));
+    view->setScene(scene);
 
     retranslateUi();
 
