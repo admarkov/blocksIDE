@@ -93,8 +93,6 @@ void MainWindow::setupUi()
     graphicsView = new QGraphicsView(centralWidget);
     graphicsView->setObjectName(QStringLiteral("graphicsView"));
     graphicsView->setGeometry(QRect(0, 0, 760, 455));
-    graphicsView->setSceneRect(QRectF(0, 0, 758, 445));
-    graphicsView->setDragMode(QGraphicsView::NoDrag);
 
     retranslateUi();
 
