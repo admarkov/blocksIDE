@@ -13,9 +13,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    diagramscene.cpp
+    diagramscene.cpp \
+    diagramitem.cpp
 
 HEADERS  += mainwindow.h \
-    diagramscene.h
+    diagramscene.h \
+    diagramitem.h
 
 FORMS    +=

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "diagramscene.h"
+#include "diagramitem.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -18,6 +19,15 @@ void MainWindow::setupUi()
     centralWidget = new QWidget(this);
     centralWidget->setObjectName(QStringLiteral("centralWidget"));
     this->setCentralWidget(centralWidget);
+
+    scene = new DiagramScene();
+    scene->setObjectName(QStringLiteral("scene"));
+    scene->setSceneRect(0, 0, w-10, h-27);
+
+    view = new QGraphicsView(centralWidget);
+    view->setObjectName(QStringLiteral("view"));
+    view->setGeometry(QRect(0, 0, w, h-25));
+    view->setScene(scene);
 
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -72,6 +82,7 @@ void MainWindow::setupUi()
     menuBlocks_if = new QAction(this);
     menuBlocks_if->setObjectName(QStringLiteral("menuBlocks_if"));
     menuBlocks->addAction(menuBlocks_if);
+    connect(menuBlocks_if, SIGNAL(triggered()), scene, SLOT(addConditionalItem()));
     menuBlocks_io = new QAction(this);
     menuBlocks_io->setObjectName(QStringLiteral("menuBlocks_io"));
     menuBlocks->addAction(menuBlocks_io);
@@ -87,14 +98,6 @@ void MainWindow::setupUi()
     menuRun_stop->setObjectName(QStringLiteral("menuRun_stop"));
     menuRun->addAction(menuRun_stop);
     menuRun_stop->setEnabled(false);
-
-    scene = new DiagramScene();
-    scene->setObjectName(QStringLiteral("scene"));
-    scene->setSceneRect(0, 0, w-10, h-27);
-    view = new QGraphicsView(centralWidget);
-    view->setObjectName(QStringLiteral("view"));
-    view->setGeometry(QRect(0, 0, w, h-25));
-    view->setScene(scene);
 
     retranslateUi();
 

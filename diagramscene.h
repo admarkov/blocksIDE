@@ -2,6 +2,7 @@
 #define DIAGRAMSCENE_H
 
 #include <QGraphicsScene>
+#include "diagramitem.h"
 
 class DiagramScene : public QGraphicsScene
 {
@@ -10,6 +11,11 @@ class DiagramScene : public QGraphicsScene
 
 public:
     explicit DiagramScene(QObject *parent = 0);
+
+private:
+    void addDiagramItem(DiagramItem *item);
+public slots:
+    void addConditionalItem();
 };
 
 #endif // DIAGRAMSCENE_H
