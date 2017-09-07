@@ -99,27 +99,28 @@ void MainWindow::setupUi()
 
 void MainWindow::retranslateUi()
 {
-    setWindowTitle(QApplication::translate("MainWindow", "Diagram IDE", 0));
+    setWindowTitle(tr("Diagram IDE"));
+
     menuFile_new->setText(tr("Новая"));
     menuFile_open->setText(tr("Открыть"));
     menuFile_save->setText(tr("Сохранить"));
     menuFile_saveas->setText(tr("Сохранить как"));
-    menuEdit_addConnection->setText(QApplication::translate("MainWindow", "Добавить связь", 0));;
-    menuEdit_delItem->setText(QApplication::translate("MainWindow", "Удалить узел", 0));;
-    menuEdit_delConnection->setText(QApplication::translate("MainWindow", "Удалить связь", 0));;
-    menuEdit_editText->setText(QApplication::translate("MainWindow", "Редактировать текст", 0));;
-    menuBlocks_begend->setText(QApplication::translate("MainWindow", "Начало/конец", 0));;
-    menuBlocks_action->setText(QApplication::translate("MainWindow", "Вычисление", 0));;
-    menuBlocks_if->setText(QApplication::translate("MainWindow", "Выбор", 0));;
-    menuBlocks_io->setText(QApplication::translate("MainWindow", "Ввод/вывод", 0));;
-    menuRun_manual->setText(QApplication::translate("MainWindow", "Пошаговый", 0));;
-    menuRun_auto->setText(QApplication::translate("MainWindow", "Непрерывный", 0));;
-    menuRun_stop->setText(QApplication::translate("MainWindow", "Стоп", 0));;
+    menuEdit_addConnection->setText(tr("Добавить связь"));
+    menuEdit_delItem->setText(tr("Удалить узел"));
+    menuEdit_delConnection->setText(tr("Удалить связь"));
+    menuEdit_editText->setText(tr("Редактировать текст"));
+    menuBlocks_begend->setText(tr("Начало/конец"));
+    menuBlocks_action->setText(tr("Вычисление"));
+    menuBlocks_if->setText(tr("Выбор"));
+    menuBlocks_io->setText(tr("Ввод/вывод"));
+    menuRun_manual->setText(tr("Пошаговый"));
+    menuRun_auto->setText(tr("Непрерывный"));
+    menuRun_stop->setText(tr("Стоп"));
 
-    menuFile->setTitle(QApplication::translate("MainWindow", "Файл", 0));
-    menuEdit->setTitle(QApplication::translate("MainWindow", "Редактировать", 0));
-    menuBlocks->setTitle(QApplication::translate("MainWindow", "Добавить узел", 0));
-    menuRun->setTitle(QApplication::translate("MainWindow", "Запуск", 0));
+    menuFile->setTitle(tr("Файл"));
+    menuEdit->setTitle(tr("Редактировать"));
+    menuBlocks->setTitle(tr("Добавить узел"));
+    menuRun->setTitle(tr("Запуск"));
 }
 
 
