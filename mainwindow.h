@@ -2,10 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-namespace Ui {
-class MainWindow;
-}
+#include <QGraphicsView>
+#include <QMenuBar>
+#include <QMenu>
+#include <QtWidgets/QWidget>
+#include <QApplication>
 
 class MainWindow : public QMainWindow
 {
@@ -15,8 +16,38 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
+    QWidget *centralWidget;
+
+    QMenu *menuFile;
+    QMenu *menuEdit;
+    QMenu *menuBlocks;
+    QMenu *menuRun;
+
+    QAction *menuFile_new;
+    QAction *menuFile_open;
+    QAction *menuFile_save;
+    QAction *menuFile_saveas;
+    QAction *menuEdit_addItem;
+    QAction *menuEdit_addConnection;
+    QAction *menuEdit_delItem;
+    QAction *menuEdit_delConnection;
+    QAction *menuEdit_editText;
+    QAction *menuBlocks_begend;
+    QAction *menuBlocks_action;
+    QAction *menuBlocks_if;
+    QAction *menuBlocks_io;
+    QAction *menuRun_manual;
+    QAction *menuRun_auto;
+    QAction *menuRun_stop;
+
+    QMenuBar *menuBar;
+
+    QGraphicsView *graphicsView;
+
+
+    void setupUi();
+
+    void retranslateUi();
 };
 
 #endif // MAINWINDOW_H

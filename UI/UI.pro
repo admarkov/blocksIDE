@@ -11,9 +11,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = blocksIDE
 TEMPLATE = app
 
-SOURCES += main.cpp\
-        mainwindow.cpp
 
-HEADERS  += mainwindow.h
+SOURCES += main.cpp\
+        mainwindow.cpp \
+    diagramscene.cpp
+
+HEADERS  += mainwindow.h \
+    diagramscene.h
 
 FORMS    +=
