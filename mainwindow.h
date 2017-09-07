@@ -27,7 +27,6 @@ public:
     QAction *menuFile_open;
     QAction *menuFile_save;
     QAction *menuFile_saveas;
-    QAction *menuEdit_addItem;
     QAction *menuEdit_addConnection;
     QAction *menuEdit_delItem;
     QAction *menuEdit_delConnection;

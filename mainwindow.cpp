@@ -49,9 +49,7 @@ void MainWindow::setupUi()
     menuFile_saveas->setObjectName(QStringLiteral("menuFile_saveas"));
     menuFile->addAction(menuFile_saveas);
 
-    menuEdit_addItem = new QAction(this);
-    menuEdit_addItem->setObjectName(QStringLiteral("menuEdit_addItem"));
-    menuEdit->addAction(menuEdit_addItem);
+    menuEdit->addMenu(menuBlocks);
     menuEdit_addConnection = new QAction(this);
     menuEdit_addConnection->setObjectName(QStringLiteral("menuEdit_addConnection"));
     menuEdit->addAction(menuEdit_addConnection);
@@ -102,11 +100,10 @@ void MainWindow::setupUi()
 void MainWindow::retranslateUi()
 {
     setWindowTitle(QApplication::translate("MainWindow", "Diagram IDE", 0));
-    menuFile_new->setText(QApplication::translate("MainWindow", "Новая", 0));;
-    menuFile_open->setText(QApplication::translate("MainWindow", "Открыть", 0));;
-    menuFile_save->setText(QApplication::translate("MainWindow", "Сохранить", 0));;
-    menuFile_saveas->setText(QApplication::translate("MainWindow", "Сохранить как", 0));;
-    menuEdit_addItem->setText(QApplication::translate("MainWindow", "Добавить узел", 0));;
+    menuFile_new->setText(tr("Новая"));
+    menuFile_open->setText(tr("Открыть"));
+    menuFile_save->setText(tr("Сохранить"));
+    menuFile_saveas->setText(tr("Сохранить как"));
     menuEdit_addConnection->setText(QApplication::translate("MainWindow", "Добавить связь", 0));;
     menuEdit_delItem->setText(QApplication::translate("MainWindow", "Удалить узел", 0));;
     menuEdit_delConnection->setText(QApplication::translate("MainWindow", "Удалить связь", 0));;
