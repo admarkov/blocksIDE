@@ -78,9 +78,11 @@ void MainWindow::setupUi()
     menuBlocks_begend = new QAction(this);
     menuBlocks_begend->setObjectName(QStringLiteral("menuBlocks_begend"));
     menuBlocks->addAction(menuBlocks_begend);
+    connect(menuBlocks_begend, SIGNAL(triggered()), scene, SLOT(addStartEndItem()));
     menuBlocks_action = new QAction(this);
     menuBlocks_action->setObjectName(QStringLiteral("menuBlocks_action"));
     menuBlocks->addAction(menuBlocks_action);
+    connect(menuBlocks_action, SIGNAL(triggered()), scene, SLOT(addStepItem()));
     menuBlocks_if = new QAction(this);
     menuBlocks_if->setObjectName(QStringLiteral("menuBlocks_if"));
     menuBlocks->addAction(menuBlocks_if);
@@ -88,6 +90,7 @@ void MainWindow::setupUi()
     menuBlocks_io = new QAction(this);
     menuBlocks_io->setObjectName(QStringLiteral("menuBlocks_io"));
     menuBlocks->addAction(menuBlocks_io);
+    connect(menuBlocks_io, SIGNAL(triggered()), scene, SLOT(addIOItem()));
 
     menuRun_manual = new QAction(this);
     menuRun_manual->setObjectName(QStringLiteral("menuRun_manual"));

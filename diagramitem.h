@@ -3,12 +3,13 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsPolygonItem>
+#include <QPaintEvent>
 
-class DiagramItem : public QGraphicsPolygonItem
+class DiagramItem : public QGraphicsPolygonItem, public QObject
 {
 public:
 
-    enum DiagramType {Step, Conditional, StartEnd, Io};
+    enum DiagramType {Step, Conditional, StartEnd, IO};
 
     DiagramItem(DiagramType type, QGraphicsItem *parent = 0);
 
@@ -16,6 +17,7 @@ public:
     QPolygonF polygon() const { return _polygon; }
 
 private:
+
     DiagramType _diagramType;
     QPolygonF _polygon;
 };

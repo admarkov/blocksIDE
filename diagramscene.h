@@ -15,7 +15,10 @@ public:
 private:
     void addDiagramItem(DiagramItem *item);
 public slots:
+    void addStartEndItem();
     void addConditionalItem();
+    void addStepItem();
+    void addIOItem();
 };
 
 #endif // DIAGRAMSCENE_H
