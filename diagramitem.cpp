@@ -4,7 +4,6 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent)
     : QGraphicsPolygonItem(parent)
 {
     _diagramType = type;
-    QPainterPath path;
     switch(diagramType()) {
         case Conditional:
             _polygon << QPointF(-100, 0) << QPointF(0, 100) << QPointF(100, 0) << QPointF(0, -100) << QPointF(-100, 0);

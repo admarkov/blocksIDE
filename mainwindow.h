@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QtWidgets/QWidget>
 #include <QApplication>
+#include <QLabel>
 #include "diagramscene.h"
 
 class MainWindow : public QMainWindow
@@ -44,6 +45,9 @@ public:
     QAction *menuRun_stop;
 
     QMenuBar *menuBar;
+
+    QStatusBar *statusBar;
+    QLabel *statusBar_message;
 
     DiagramScene *scene;
     QGraphicsView *view;

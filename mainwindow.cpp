@@ -2,6 +2,8 @@
 #include "diagramscene.h"
 #include "diagramitem.h"
 
+#include <QStatusBar>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -98,6 +100,12 @@ void MainWindow::setupUi()
     menuRun_stop->setObjectName(QStringLiteral("menuRun_stop"));
     menuRun->addAction(menuRun_stop);
     menuRun_stop->setEnabled(false);
+
+    statusBar = new QStatusBar(this);
+    setStatusBar(statusBar);
+    statusBar_message = new QLabel;
+    statusBar_message->hide();
+    statusBar->addWidget(statusBar_message);
 
     retranslateUi();
 
