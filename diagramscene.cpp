@@ -42,6 +42,7 @@ void DiagramScene::itemPositionChanged(DiagramItem *item, QPointF newPos) {
             bottom=603,
             left=0,
             right=1190;
+
     bool    changedX = false,
             changedY = false;
 
@@ -72,7 +73,25 @@ void DiagramScene::itemClicked(DiagramItem *item) {
         removeItem(item);
         delete item;
     }
+    selectStatus(Normal);
+}
 
-    ((MainWindow*)w)->statusBar->clearMessage();
-    status = Normal;
+void DiagramScene::selectStatus(SceneStatus newStatus) {
+    MainWindow *W = (MainWindow*)(w);
+    if (newStatus == Normal) {
+        W->menuFile->setEnabled(true);
+        W->menuEdit->setEnabled(true);
+        W->statusBar->clearMessage();
+        //updateRunnable();
+        status = Normal;
+    }
+    else {
+        W->menuFile->setEnabled(false);
+        W->menuEdit->setEnabled(false);
+        W->menuRun->setEnabled(false);
+        if (newStatus==DeletingItem) {
+            W->statusBar->showMessage("Нажмите на узел для удаления. Для отмены нажмите Esc.");
+            status = DeletingItem;
+        }
+    }
 }

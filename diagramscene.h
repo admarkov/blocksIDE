@@ -14,6 +14,7 @@ class DiagramScene : public QGraphicsScene
 public:
     explicit DiagramScene(QObject *parent = 0);
     enum SceneStatus {Normal, DeletingItem} status;
+    void selectStatus(SceneStatus newStatus);
 
 private:
     void addDiagramItem(DiagramItem *item);

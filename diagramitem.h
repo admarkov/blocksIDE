@@ -23,7 +23,6 @@ public:
 
     void setText(QString s);
 
-
 private:
 
     QGraphicsTextItem *textItem;

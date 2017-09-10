@@ -2,6 +2,7 @@
 #include "diagramscene.h"
 #include "diagramitem.h"
 
+#include <QDebug>
 #include <QStatusBar>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -154,10 +155,14 @@ void MainWindow::retranslateUi()
 }
 
 void MainWindow::deleteItemAction() {
-    scene->status = DiagramScene::SceneStatus::DeletingItem;
-    statusBar->showMessage(tr("Кликните на узел, который необходимо удалить"));
+    scene->selectStatus(DiagramScene::DeletingItem);
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if (event->key()==Qt::Key_Escape) {
+        scene->selectStatus(DiagramScene::Normal);
+    }
+}
 
 MainWindow::~MainWindow()
 {

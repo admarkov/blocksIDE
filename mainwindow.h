@@ -31,7 +31,6 @@ public:
         statusBar_message->hide();
     }
 
-private:
     const int h = 650;
     const int w = 1200;
 
@@ -71,6 +70,8 @@ private:
     void setupUi();
 
     void retranslateUi();
+
+    void keyPressEvent(QKeyEvent *event);
 
 public slots:
 
