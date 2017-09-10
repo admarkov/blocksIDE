@@ -1,10 +1,12 @@
 #include "diagramscene.h"
+#include "mainwindow.h"
 #include <QDebug>
 
 DiagramScene::DiagramScene(QObject *parent)
     : QGraphicsScene(parent)
 {
     status = SceneStatus::Normal;
+    w = parent;
 }
 
 void DiagramScene::addDiagramItem(DiagramItem *item) {
@@ -70,5 +72,7 @@ void DiagramScene::itemClicked(DiagramItem *item) {
         removeItem(item);
         delete item;
     }
+
+    ((MainWindow*)w)->statusBar->clearMessage();
     status = Normal;
 }

@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QString>
 #include "diagramscene.h"
 
 class MainWindow : public QMainWindow
@@ -19,6 +20,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    QStatusBar *statusBar;
+
+    void showMessage(QString s) {
+        statusBar_message->setText(s);
+        statusBar_message->show();
+    }
+
+    void hideMessage() {
+        statusBar_message->hide();
+    }
 
 private:
     const int h = 650;
@@ -49,7 +60,6 @@ private:
 
     QMenuBar *menuBar;
 
-    QStatusBar *statusBar;
     QLabel *statusBar_message;
 
     DiagramScene *scene;

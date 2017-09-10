@@ -22,7 +22,7 @@ void MainWindow::setupUi()
     centralWidget->setObjectName(QStringLiteral("centralWidget"));
     this->setCentralWidget(centralWidget);
 
-    scene = new DiagramScene();
+    scene = new DiagramScene(this);
     scene->setObjectName(QStringLiteral("scene"));
     scene->setSceneRect(0, 0, w-10, h-47);
 
@@ -119,6 +119,9 @@ void MainWindow::setupUi()
     editorbtn->setGeometry(w-100,25,100,30);
     editorbtn->setText("Применить");
 
+    lineEditor->hide();
+    editorbtn->hide();
+
     retranslateUi();
 
     QMetaObject::connectSlotsByName(this);
@@ -152,6 +155,7 @@ void MainWindow::retranslateUi()
 
 void MainWindow::deleteItemAction() {
     scene->status = DiagramScene::SceneStatus::DeletingItem;
+    statusBar->showMessage(tr("Кликните на узел, который необходимо удалить"));
 }
 
 

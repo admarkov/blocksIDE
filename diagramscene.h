@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include "diagramitem.h"
 #include <QLabel>
+#include <QStatusBar>
 
 class DiagramScene : public QGraphicsScene
 {
@@ -16,6 +17,8 @@ public:
 
 private:
     void addDiagramItem(DiagramItem *item);
+    QObject *w;
+
 public slots:
     void addStartEndItem();
     void addConditionalItem();
