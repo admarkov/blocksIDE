@@ -37,7 +37,6 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
     textItem = new QGraphicsTextItem(this);
-    textItem->setPos(-(textItem->boundingRect().width()/2), -(textItem->boundingRect().height()/2));
 }
 
 DiagramItem::~DiagramItem() {
@@ -46,6 +45,11 @@ DiagramItem::~DiagramItem() {
 
 void DiagramItem::setText(QString s) {
     textItem->setPlainText(s);
+    textItem->setPos(-(textItem->boundingRect().width()/2), -(textItem->boundingRect().height()/2));
+}
+
+QString DiagramItem::Text() {
+    return textItem->toPlainText();
 }
 
 QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &value)

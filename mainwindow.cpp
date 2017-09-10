@@ -76,6 +76,7 @@ void MainWindow::setupUi()
     menuEdit_editText= new QAction(this);
     menuEdit_editText->setObjectName(QStringLiteral("menuEdit_editText"));
     menuEdit->addAction(menuEdit_editText);
+    connect(menuEdit_editText, SIGNAL(triggered()), this, SLOT(editTextAction()));
 
     menuBlocks_begend = new QAction(this);
     menuBlocks_begend->setObjectName(QStringLiteral("menuBlocks_begend"));
@@ -115,10 +116,12 @@ void MainWindow::setupUi()
     lineEditor = new QLineEdit(this);
     lineEditor->setGeometry(0,25,w-100,30);
     lineEditor->setFont(QFont("Verdana", 12));
+    connect(lineEditor, SIGNAL(textEdited(QString)), scene, SLOT(onTextEdited(QString)));
 
     editorbtn = new QPushButton(this);
     editorbtn->setGeometry(w-100,25,100,30);
-    editorbtn->setText("Применить");
+    editorbtn->setText("Завершить");
+    connect(editorbtn, SIGNAL(clicked(bool)), this, SLOT(resetSceneStatus()));
 
     lineEditor->hide();
     editorbtn->hide();
@@ -156,6 +159,14 @@ void MainWindow::retranslateUi()
 
 void MainWindow::deleteItemAction() {
     scene->selectStatus(DiagramScene::DeletingItem);
+}
+
+void MainWindow::editTextAction() {
+    scene->selectStatus(DiagramScene::EditingText);
+}
+
+void MainWindow::resetSceneStatus() {
+    scene->selectStatus(DiagramScene::Normal);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {

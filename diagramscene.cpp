@@ -72,8 +72,13 @@ void DiagramScene::itemClicked(DiagramItem *item) {
     if (status==DeletingItem) {
         removeItem(item);
         delete item;
+        selectStatus(Normal);
     }
-    selectStatus(Normal);
+    if (status==EditingText) {
+        editing = item;
+        ((MainWindow*)w)->lineEditor->setEnabled(true);
+        ((MainWindow*)w)->lineEditor->setText(editing->Text().replace("\n", ";"));
+    }
 }
 
 void DiagramScene::selectStatus(SceneStatus newStatus) {
@@ -82,6 +87,8 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->menuFile->setEnabled(true);
         W->menuEdit->setEnabled(true);
         W->statusBar->clearMessage();
+        W->lineEditor->hide();
+        W->editorbtn->hide();
         //updateRunnable();
         status = Normal;
     }
@@ -93,5 +100,20 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
             W->statusBar->showMessage("Нажмите на узел для удаления. Для отмены нажмите Esc.");
             status = DeletingItem;
         }
+        if (newStatus==EditingText) {
+            W->statusBar->showMessage("Нажите на узел для редактирования текста. Используйте ; для разделения строк.");
+            W->lineEditor->setText("");
+            W->lineEditor->show();
+            W->editorbtn->show();
+            W->lineEditor->setEnabled(false);
+            editing = nullptr;
+            status = EditingText;
+        }
+    }
+}
+
+void DiagramScene::onTextEdited(QString text) {
+    if (editing!=nullptr) {
+        editing->setText(text.replace(";", "\n"));
     }
 }

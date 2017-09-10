@@ -22,6 +22,7 @@ public:
     QPolygonF polygon() const { return _polygon; }
 
     void setText(QString s);
+    QString Text();
 
 private:
 
