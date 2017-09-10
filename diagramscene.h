@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include "diagramitem.h"
+#include <QLabel>
 
 class DiagramScene : public QGraphicsScene
 {
@@ -19,6 +20,7 @@ public slots:
     void addConditionalItem();
     void addStepItem();
     void addIOItem();
+    void itemPositionChanged(DiagramItem *item, QPointF newPos);
 };
 
 #endif // DIAGRAMSCENE_H

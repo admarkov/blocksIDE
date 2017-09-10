@@ -4,9 +4,13 @@
 #include <QGraphicsScene>
 #include <QGraphicsPolygonItem>
 #include <QPaintEvent>
+#include <QObject>
 
-class DiagramItem : public QGraphicsPolygonItem, public QObject
+class DiagramItem :  public QObject, public QGraphicsPolygonItem
 {
+
+    Q_OBJECT
+
 public:
 
     enum DiagramType {Step, Conditional, StartEnd, IO};
@@ -20,6 +24,13 @@ private:
 
     DiagramType _diagramType;
     QPolygonF _polygon;
+
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
+signals:
+    void positionChanged(DiagramItem *item, QPointF newPos);
+
 };
 
 #endif // DIAGRAMITEM_H

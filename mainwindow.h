@@ -18,8 +18,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    const int h = 600;
-    const int w = 960;
+private:
+    const int h = 650;
+    const int w = 1200;
 
     QWidget *centralWidget;
 

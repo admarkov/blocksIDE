@@ -1,4 +1,5 @@
 #include "diagramscene.h"
+#include <QDebug>
 
 DiagramScene::DiagramScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -9,6 +10,7 @@ DiagramScene::DiagramScene(QObject *parent)
 void DiagramScene::addDiagramItem(DiagramItem *item) {
     item->setPos(300,200);
     addItem(item);
+    connect(item, SIGNAL(positionChanged(DiagramItem*,QPointF)), this, SLOT(itemPositionChanged(DiagramItem*,QPointF)));
 }
 
 void DiagramScene::addStartEndItem() {
@@ -25,4 +27,9 @@ void DiagramScene::addStepItem() {
 
 void DiagramScene::addIOItem() {
     addDiagramItem(new DiagramItem(DiagramItem::IO));
+}
+
+void DiagramScene::itemPositionChanged(DiagramItem *item, QPointF newPos) {
+    Q_UNUSED(item);
+    qDebug()<<newPos.x()<<" "<<newPos.y()<<"; ";
 }

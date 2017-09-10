@@ -1,10 +1,11 @@
 #include "diagramitem.h"
 #include <QPainterPath>
+#include "mainwindow.h"
 
-DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent)
-    : QGraphicsPolygonItem(parent)
+DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), QGraphicsPolygonItem(parent)
 {
     _diagramType = type;
+
     switch(diagramType()) {
         case StartEnd: {
             QPainterPath path;
@@ -34,4 +35,12 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent)
     setPolygon(_polygon);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+}
+
+QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &value)
+ {
+     if (change == ItemPositionChange && scene()) {
+         emit positionChanged(this, value.toPointF());
+     }
+     return QGraphicsItem::itemChange(change, value);
 }
