@@ -31,5 +31,32 @@ void DiagramScene::addIOItem() {
 
 void DiagramScene::itemPositionChanged(DiagramItem *item, QPointF newPos) {
     Q_UNUSED(item);
-    qDebug()<<newPos.x()<<" "<<newPos.y()<<"; ";
+    int     top=0,
+            bottom=603,
+            left=0,
+            right=1190;
+    bool    changedX = false,
+            changedY = false;
+
+    for (auto  it : items()) {
+        if (it->x() < left + 80) left = it->x(), changedX = true;
+        if (it->x() > right - 80) right = it->x(), changedX = true;
+        if (it->y() < top + 40) top = it->y(), changedY = true;
+        if (it->y() > bottom -40) bottom = it->y(), changedY = true;
+    }
+    int     newX = 0,
+            newY = top,
+            newW = right - left,
+            newH = bottom - top;
+    if (changedX) {
+        newX = left - 100;
+        newW = right - left + 200;
+        newH -= 20;
+    }
+    if (changedY) {
+        newY = top - 60;
+        newH = bottom - top + 140;
+    }
+
+    setSceneRect(newX, newY, newW, newH);
 }

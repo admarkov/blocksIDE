@@ -24,11 +24,11 @@ void MainWindow::setupUi()
 
     scene = new DiagramScene();
     scene->setObjectName(QStringLiteral("scene"));
-    scene->setSceneRect(0, 0, w-10, h-27);
+    scene->setSceneRect(0, 0, w-10, h-47);
 
     view = new QGraphicsView(centralWidget);
     view->setObjectName(QStringLiteral("view"));
-    view->setGeometry(QRect(0, 0, w, h-25));
+    view->setGeometry(QRect(0, 0, w, h-45));
     view->setScene(scene);
 
     menuBar = new QMenuBar(this);
