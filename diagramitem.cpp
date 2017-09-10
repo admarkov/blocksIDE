@@ -35,6 +35,17 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
     setPolygon(_polygon);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+
+    textItem = new QGraphicsTextItem(this);
+    textItem->setPos(-(textItem->boundingRect().width()/2), -(textItem->boundingRect().height()/2));
+}
+
+DiagramItem::~DiagramItem() {
+    delete textItem;
+}
+
+void DiagramItem::setText(QString s) {
+    textItem->setPlainText(s);
 }
 
 QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &value)

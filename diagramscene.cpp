@@ -8,7 +8,7 @@ DiagramScene::DiagramScene(QObject *parent)
 }
 
 void DiagramScene::addDiagramItem(DiagramItem *item) {
-    item->setPos(300,200);
+    item->setPos(100,60);
     addItem(item);
     connect(item, SIGNAL(positionChanged(DiagramItem*,QPointF)), this, SLOT(itemPositionChanged(DiagramItem*,QPointF)));
 }
