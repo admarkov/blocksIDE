@@ -5,7 +5,6 @@
 DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), QGraphicsPolygonItem(parent)
 {
     _diagramType = type;
-
     switch(diagramType()) {
         case StartEnd: {
             QPainterPath path;
@@ -32,6 +31,7 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
             break;
     }
 
+    setBrush(QBrush(Qt::white));
     setPolygon(_polygon);
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
