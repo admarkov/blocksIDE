@@ -55,3 +55,7 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &valu
      }
      return QGraphicsItem::itemChange(change, value);
 }
+
+void DiagramItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    emit clicked(this);
+}

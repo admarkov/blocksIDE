@@ -23,17 +23,20 @@ public:
 
     void setText(QString s);
 
+
 private:
 
     QGraphicsTextItem *textItem;
     DiagramType _diagramType;
     QPolygonF _polygon;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 signals:
     void positionChanged(DiagramItem *item, QPointF newPos);
+    void clicked(DiagramItem *item);
 
 };
 

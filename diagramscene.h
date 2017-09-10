@@ -12,6 +12,7 @@ class DiagramScene : public QGraphicsScene
 
 public:
     explicit DiagramScene(QObject *parent = 0);
+    enum SceneStatus {Normal, DeletingItem} status;
 
 private:
     void addDiagramItem(DiagramItem *item);
@@ -21,6 +22,7 @@ public slots:
     void addStepItem();
     void addIOItem();
     void itemPositionChanged(DiagramItem *item, QPointF newPos);
+    void itemClicked(DiagramItem *item);
 };
 
 #endif // DIAGRAMSCENE_H

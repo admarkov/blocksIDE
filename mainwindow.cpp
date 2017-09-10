@@ -67,6 +67,7 @@ void MainWindow::setupUi()
     menuEdit->addAction(menuEdit_addConnection);
     menuEdit_delItem = new QAction(this);
     menuEdit_delItem->setObjectName(QStringLiteral("menuEdit_delItem"));
+    connect(menuEdit_delItem, SIGNAL(triggered()), this, SLOT(deleteItemAction()));
     menuEdit->addAction(menuEdit_delItem);
     menuEdit_delConnection = new QAction(this);
     menuEdit_delConnection->setObjectName(QStringLiteral("menuEdit_delConnection"));
@@ -110,6 +111,14 @@ void MainWindow::setupUi()
     statusBar_message->hide();
     statusBar->addWidget(statusBar_message);
 
+    lineEditor = new QLineEdit(this);
+    lineEditor->setGeometry(0,25,w-100,30);
+    lineEditor->setFont(QFont("Verdana", 12));
+
+    editorbtn = new QPushButton(this);
+    editorbtn->setGeometry(w-100,25,100,30);
+    editorbtn->setText("Применить");
+
     retranslateUi();
 
     QMetaObject::connectSlotsByName(this);
@@ -139,6 +148,10 @@ void MainWindow::retranslateUi()
     menuEdit->setTitle(tr("Редактировать"));
     menuBlocks->setTitle(tr("Добавить узел"));
     menuRun->setTitle(tr("Запуск"));
+}
+
+void MainWindow::deleteItemAction() {
+    scene->status = DiagramScene::SceneStatus::DeletingItem;
 }
 
 

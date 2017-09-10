@@ -8,6 +8,8 @@
 #include <QtWidgets/QWidget>
 #include <QApplication>
 #include <QLabel>
+#include <QPushButton>
+#include <QLineEdit>
 #include "diagramscene.h"
 
 class MainWindow : public QMainWindow
@@ -53,10 +55,17 @@ private:
     DiagramScene *scene;
     QGraphicsView *view;
 
+    QLineEdit *lineEditor;
+    QPushButton *editorbtn;
 
     void setupUi();
 
     void retranslateUi();
+
+public slots:
+
+    void deleteItemAction();
+
 };
 
 #endif // MAINWINDOW_H
