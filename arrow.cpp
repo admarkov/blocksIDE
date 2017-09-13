@@ -11,7 +11,7 @@ Arrow::Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent)
 {
     StartItem = start;
     EndItem = end;
-    setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 }
 
 Arrow::~Arrow() {
@@ -56,7 +56,7 @@ QPainterPath Arrow::shape() const
 }
 
 void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget ) {
-    qreal arrowSize = 20;
+    qreal arrowSize = 8;
     painter->setPen(pen());
     painter->setBrush(Qt::black);
 
@@ -68,11 +68,11 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     if (line().dy() >= 0)
         angle = (Pi * 2) - angle;
 
-    QPointF arrowP1 = line().p1() + QPointF(sin(angle + Pi / 3) * arrowSize, cos(angle + Pi / 3) * arrowSize);
-    QPointF arrowP2 = line().p1() + QPointF(sin(angle + Pi - Pi / 3) * arrowSize, cos(angle + Pi - Pi / 3) * arrowSize);
+    QPointF arrowP1 = line().p2() - QPointF(sin(angle + Pi / 3) * arrowSize, cos(angle + Pi / 3) * arrowSize);
+    QPointF arrowP2 = line().p2() - QPointF(sin(angle + Pi - Pi / 3) * arrowSize, cos(angle + Pi - Pi / 3) * arrowSize);
 
     arrowHead.clear();
-    arrowHead << line().p1() << arrowP1 << arrowP2;
+    arrowHead << line().p2() << arrowP1 << arrowP2;
 
     painter->drawLine(line());
     painter->drawPolygon(arrowHead);
