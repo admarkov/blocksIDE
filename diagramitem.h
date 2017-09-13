@@ -23,6 +23,7 @@ public:
 
     void setText(QString s);
     QString Text();
+    void redraw();
 
 private:
 

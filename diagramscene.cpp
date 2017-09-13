@@ -114,6 +114,22 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
 
 void DiagramScene::onTextEdited(QString text) {
     if (editing!=nullptr) {
+        if (editing->diagramType()==DiagramItem::StartEnd || editing->diagramType()==DiagramItem::Conditional) {
+            ((MainWindow*)w)->lineEditor->setText(text.replace(";",""));
+            editing->setText(text.replace(";", ""));
+        }
+        if (editing->diagramType()==DiagramItem::IO) {
+            int newlinepos=0;
+            for (int i=0; i<text.length(); i++)
+                if (text[i]==';')
+                    newlinepos=i;
+            int linelen = text.length()-newlinepos;
+            if (linelen>40)
+                text.remove(text.length()-1, 1);
+            ((MainWindow*)w)->lineEditor->setText(text);
+            editing->setText(text);
+        }
         editing->setText(text.replace(";", "\n"));
+        editing->redraw();
     }
 }
