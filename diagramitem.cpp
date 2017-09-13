@@ -11,7 +11,6 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     textItem = new QGraphicsTextItem(this);
-    textItem->setFlag(ItemIsSelectable, true);
     redraw();
 }
 
