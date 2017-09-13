@@ -42,7 +42,7 @@ void Arrow::updatePosition()
             startPoint = QPointF(StartItem->width, 0);
     }
     else {
-        startPoint = QPointF(0, EndItem->height);
+        startPoint = QPointF(0, StartItem->height);
     }
     QLineF line(mapFromItem(StartItem, startPoint), mapFromItem(EndItem, endPoint));
     setLine(line);
