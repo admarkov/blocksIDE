@@ -66,6 +66,7 @@ void MainWindow::setupUi()
     menuEdit_addConnection = new QAction(this);
     menuEdit_addConnection->setObjectName(QStringLiteral("menuEdit_addConnection"));
     menuEdit->addAction(menuEdit_addConnection);
+    connect(menuEdit_addConnection, SIGNAL(triggered(bool)), scene, SLOT(addArrow()));
     menuEdit_delItem = new QAction(this);
     menuEdit_delItem->setObjectName(QStringLiteral("menuEdit_delItem"));
     connect(menuEdit_delItem, SIGNAL(triggered()), this, SLOT(deleteItemAction()));

@@ -2,10 +2,12 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <algorithm>
+#include "arrow.h"
 #include "mainwindow.h"
 
 DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), QGraphicsPolygonItem(parent)
 {
+    inArrow = outArrow1 = outArrow2 = nullptr;
     _diagramType = type;
     setBrush(QBrush(Qt::white));
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -16,6 +18,15 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
 
 DiagramItem::~DiagramItem() {
     delete textItem;
+    if (inArrow!=nullptr) {
+        delete inArrow;
+    }
+    if (outArrow1!=nullptr) {
+        delete outArrow1;
+    }
+    if (outArrow2!=nullptr) {
+        delete outArrow2;
+    }
 }
 
 void DiagramItem::setText(QString s) {
@@ -45,11 +56,10 @@ void DiagramItem::redraw() {
     else {
         hw+=std::max(0,Text().length()-14)*3;
     }
-    /*
-    QRectF textRect = textItem->boundingRect();
-    if (textRect.width()>80) hw = textRect.width();
-    if (textRect.height()>40) hh = textRect.height();
-    */
+
+    height = hh;
+    width = hw;
+
     _polygon.clear();
     switch(diagramType()) {
         case StartEnd: {
@@ -83,6 +93,12 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &valu
  {
      if (change == ItemPositionChange && scene()) {
          emit positionChanged(this, value.toPointF());
+         if (outArrow1!=nullptr)
+             outArrow1->updatePosition();
+         if (outArrow2!=nullptr)
+             outArrow2->updatePosition();
+         if (inArrow!=nullptr)
+             inArrow->updatePosition();
      }
      return QGraphicsItem::itemChange(change, value);
 }

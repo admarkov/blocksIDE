@@ -6,6 +6,9 @@
 #include <QPaintEvent>
 #include <QObject>
 #include <QGraphicsTextItem>
+
+class Arrow;
+
 class DiagramItem :  public QObject, public QGraphicsPolygonItem
 {
 
@@ -24,6 +27,12 @@ public:
     void setText(QString s);
     QString Text();
     void redraw();
+
+    int width, height;
+
+    Arrow *inArrow;
+    Arrow *outArrow1;
+    Arrow *outArrow2;
 
 private:
 

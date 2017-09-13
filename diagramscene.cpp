@@ -1,5 +1,6 @@
 #include "diagramscene.h"
 #include "mainwindow.h"
+#include "arrow.h"
 #include <QDebug>
 
 DiagramScene::DiagramScene(QObject *parent)
@@ -79,6 +80,19 @@ void DiagramScene::itemClicked(DiagramItem *item) {
         ((MainWindow*)w)->lineEditor->setEnabled(true);
         ((MainWindow*)w)->lineEditor->setText(editing->Text().replace("\n", ";"));
     }
+    if (status==AddArrowStart) {
+        if (item->outArrow1==nullptr || item->diagramType()==DiagramItem::Conditional && item->outArrow2==nullptr) {
+            arrowStart = item;
+            selectStatus(AddArrowEnd);
+        }
+    }
+    if (status==AddArrowEnd) {
+        if (item->inArrow==nullptr && item!=arrowStart) {
+            arrowEnd = item;
+            addSelectedArrow();
+            selectStatus(Normal);
+        }
+    }
 }
 
 void DiagramScene::selectStatus(SceneStatus newStatus) {
@@ -90,7 +104,6 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->lineEditor->hide();
         W->editorbtn->hide();
         //updateRunnable();
-        status = Normal;
     }
     else {
         W->menuFile->setEnabled(false);
@@ -98,7 +111,6 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->menuRun->setEnabled(false);
         if (newStatus==DeletingItem) {
             W->statusBar->showMessage("Нажмите на узел для удаления. Для отмены нажмите Esc.");
-            status = DeletingItem;
         }
         if (newStatus==EditingText) {
             W->statusBar->showMessage("Нажите на узел для редактирования текста. Используйте ; для разделения строк.");
@@ -107,9 +119,15 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
             W->editorbtn->show();
             W->lineEditor->setEnabled(false);
             editing = nullptr;
-            status = EditingText;
+        }
+        if (newStatus==AddArrowStart) {
+            W->statusBar->showMessage("Нажмите на исходящий узел. Для отмены нажмите Esc.");
+        }
+        if (newStatus==AddArrowEnd) {
+            W->statusBar->showMessage("Нажмите на входящий узел. Для отмены нажмите Esc.");
         }
     }
+    status = newStatus;
 }
 
 void DiagramScene::onTextEdited(QString text) {
@@ -132,4 +150,18 @@ void DiagramScene::onTextEdited(QString text) {
         editing->setText(text.replace(";", "\n"));
         editing->redraw();
     }
+}
+
+void DiagramScene::addArrow() {
+    selectStatus(AddArrowStart);
+}
+
+void DiagramScene::addSelectedArrow() {
+    Arrow *arrow = new Arrow(arrowStart, arrowEnd);
+    if (arrowStart->outArrow1!=nullptr)
+        arrowStart->outArrow2 = arrow;
+    else
+        arrowStart->outArrow1 = arrow;
+    arrowEnd->inArrow = arrow;
+    addItem(arrow);
 }
