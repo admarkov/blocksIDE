@@ -2,6 +2,7 @@
 #define ARROW_H
 
 #include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
 #include <diagramitem.h>
 #include <QPainter>
 
@@ -15,6 +16,7 @@ public:
     Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent = 0);
     ~Arrow();
     DiagramItem *StartItem, *EndItem;
+    QGraphicsTextItem *textItem;
 
     void updatePosition();
 

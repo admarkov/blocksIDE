@@ -12,6 +12,9 @@ Arrow::Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent)
     StartItem = start;
     EndItem = end;
     setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    textItem = new QGraphicsTextItem(this);
+//    textItem->setPlainText("true");
+    updatePosition();
 }
 
 Arrow::~Arrow() {
@@ -46,6 +49,17 @@ void Arrow::updatePosition()
     }
     QLineF line(mapFromItem(StartItem, startPoint), mapFromItem(EndItem, endPoint));
     setLine(line);
+    qreal X = line.angle();
+    //qDebug()<<(startPoint.x()+endPoint.x())/2.<<(startPoint.y()+endPoint.y())/2.;
+    //qDebug()<<atan((startPoint.y()-endPoint.y())/(startPoint.x()-endPoint.x()));
+    //qDebug()<<line.angle();
+    textItem->setPos((startPoint.x()+endPoint.x())/2., (startPoint.y()+endPoint.y())/2.);
+    qreal angle = line.angle();
+    if (angle<=90 || angle>=270)
+        textItem->setRotation(-angle);
+    else
+        textItem->setRotation(-180-angle);
+    textItem->setPos((line.x1()+line.x2())/2., (line.y1()+line.y2())/2.);
 }
 
 QPainterPath Arrow::shape() const
