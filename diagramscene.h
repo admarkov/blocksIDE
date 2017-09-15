@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include "diagramitem.h"
+#include "arrow.h"
 #include <QLabel>
 #include <QStatusBar>
 
@@ -15,7 +16,8 @@ public:
     explicit DiagramScene(QObject *parent = 0);
     enum SceneStatus {Normal, DeletingItem, EditingText, AddArrowStart, AddArrowEnd, DeletingArrow} status;
     void selectStatus(SceneStatus newStatus);
-    DiagramItem *editing;
+    DiagramItem *editingItem;
+    Arrow *editingArrow;
 
 private:
     void addDiagramItem(DiagramItem *item);

@@ -1,10 +1,19 @@
 #include "arrow.h"
-
 #include <QPainter>
 #include <QPen>
 #include <cmath>
 #include <QDebug>
 using namespace std;
+
+ArrowText::ArrowText(Arrow *arr,QGraphicsItem *parent)
+    : QGraphicsTextItem(parent), arrow(arr)
+{
+
+}
+
+void ArrowText::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    arrow->mousePressEvent(event);
+}
 
 Arrow::Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent)
     : QObject(), QGraphicsLineItem(parent)
@@ -12,7 +21,7 @@ Arrow::Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent)
     StartItem = start;
     EndItem = end;
     setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    textItem = new QGraphicsTextItem(this);
+    textItem = new ArrowText(this, this);
 //    textItem->setPlainText("true");
     updatePosition();
 }

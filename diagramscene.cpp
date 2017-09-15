@@ -76,9 +76,10 @@ void DiagramScene::itemClicked(DiagramItem *item) {
         selectStatus(Normal);
     }
     if (status==EditingText) {
-        editing = item;
+        editingItem = item;
+        editingArrow = nullptr;
         ((MainWindow*)w)->lineEditor->setEnabled(true);
-        ((MainWindow*)w)->lineEditor->setText(editing->Text().replace("\n", ";"));
+        ((MainWindow*)w)->lineEditor->setText(editingItem->Text().replace("\n", ";"));
     }
     if (status==AddArrowStart) {
         if (item->outArrow1==nullptr || item->diagramType()==DiagramItem::Conditional && item->outArrow2==nullptr) {
@@ -91,6 +92,27 @@ void DiagramScene::itemClicked(DiagramItem *item) {
             arrowEnd = item;
             addSelectedArrow();
             selectStatus(Normal);
+        }
+    }
+}
+
+void DiagramScene::arrowClicked(Arrow *arrow) {
+    if (status==DeletingArrow) {
+        delete arrow;
+        selectStatus(Normal);
+    }
+    if (status==EditingText) {
+        if (arrow->StartItem->diagramType()==DiagramItem::Conditional) {
+            editingItem = nullptr;
+            editingArrow = arrow;
+            ((MainWindow*)w)->lineEditor->setEnabled(true);
+            ((MainWindow*)w)->lineEditor->setText(editingArrow->textItem->toPlainText().replace("\n", ";"));
+        }
+        else {
+            editingItem = nullptr;
+            editingArrow = nullptr;
+            ((MainWindow*)w)->lineEditor->setEnabled(false);
+            ((MainWindow*)w)->lineEditor->setText("");
         }
     }
 }
@@ -113,12 +135,13 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
             W->statusBar->showMessage("Нажмите на узел для удаления. Для отмены нажмите Esc.");
         }
         if (newStatus==EditingText) {
-            W->statusBar->showMessage("Нажите на узел для редактирования текста. Используйте ; для разделения строк.");
+            W->statusBar->showMessage("Нажите на узел или связь для редактирования текста. Используйте ; для разделения строк.");
             W->lineEditor->setText("");
             W->lineEditor->show();
             W->editorbtn->show();
             W->lineEditor->setEnabled(false);
-            editing = nullptr;
+            editingItem = nullptr;
+            editingArrow = nullptr;
         }
         if (newStatus==AddArrowStart) {
             W->statusBar->showMessage("Нажмите на исходящий узел. Для отмены нажмите Esc.");
@@ -131,12 +154,12 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
 }
 
 void DiagramScene::onTextEdited(QString text) {
-    if (editing!=nullptr) {
-        if (editing->diagramType()==DiagramItem::StartEnd || editing->diagramType()==DiagramItem::Conditional) {
+    if (editingItem!=nullptr) {
+        if (editingItem->diagramType()==DiagramItem::StartEnd || editingItem->diagramType()==DiagramItem::Conditional) {
             ((MainWindow*)w)->lineEditor->setText(text.replace(";",""));
-            editing->setText(text.replace(";", ""));
+            editingItem->setText(text.replace(";", ""));
         }
-        if (editing->diagramType()==DiagramItem::IO) {
+        if (editingItem->diagramType()==DiagramItem::IO) {
             int newlinepos=0;
             for (int i=0; i<text.length(); i++)
                 if (text[i]==';')
@@ -145,10 +168,14 @@ void DiagramScene::onTextEdited(QString text) {
             if (linelen>40)
                 text.remove(text.length()-1, 1);
             ((MainWindow*)w)->lineEditor->setText(text);
-            editing->setText(text);
+            editingItem->setText(text);
         }
-        editing->setText(text.replace(";", "\n"));
-        editing->redraw();
+        editingItem->setText(text.replace(";", "\n"));
+        editingItem->redraw();
+    }
+    if (editingArrow!=nullptr) {
+        ((MainWindow*)w)->lineEditor->setText(text.replace(";",""));
+        editingArrow->textItem->setPlainText(text.replace(";", ""));
     }
 }
 
@@ -165,11 +192,4 @@ void DiagramScene::addSelectedArrow() {
     arrowEnd->inArrow = arrow;
     addItem(arrow);
     connect(arrow, SIGNAL(clicked(Arrow*)), this, SLOT(arrowClicked(Arrow*)));
-}
-
-void DiagramScene::arrowClicked(Arrow *arrow) {
-    if (status==DeletingArrow) {
-        delete arrow;
-        selectStatus(Normal);
-    }
 }

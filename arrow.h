@@ -6,6 +6,16 @@
 #include <diagramitem.h>
 #include <QPainter>
 
+class Arrow;
+
+class ArrowText : public QGraphicsTextItem {
+public:
+    ArrowText(Arrow *arr, QGraphicsItem *parent = 0);
+    Arrow *arrow;
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+};
+
 class Arrow : public QObject, public QGraphicsLineItem
 {
 
@@ -13,10 +23,12 @@ class Arrow : public QObject, public QGraphicsLineItem
 
 public:
 
+    friend ArrowText;
+
     Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent = 0);
     ~Arrow();
     DiagramItem *StartItem, *EndItem;
-    QGraphicsTextItem *textItem;
+    ArrowText *textItem;
 
     void updatePosition();
 
