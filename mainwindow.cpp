@@ -74,6 +74,7 @@ void MainWindow::setupUi()
     menuEdit_delConnection = new QAction(this);
     menuEdit_delConnection->setObjectName(QStringLiteral("menuEdit_delConnection"));
     menuEdit->addAction(menuEdit_delConnection);
+    connect(menuEdit_delConnection, SIGNAL(triggered()), this, SLOT(deleteArrowAction()));
     menuEdit_editText= new QAction(this);
     menuEdit_editText->setObjectName(QStringLiteral("menuEdit_editText"));
     menuEdit->addAction(menuEdit_editText);
@@ -174,6 +175,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key()==Qt::Key_Escape) {
         scene->selectStatus(DiagramScene::Normal);
     }
+}
+
+void MainWindow::deleteArrowAction() {
+    scene->selectStatus(DiagramScene::DeletingArrow);
 }
 
 MainWindow::~MainWindow()

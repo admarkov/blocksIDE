@@ -164,4 +164,12 @@ void DiagramScene::addSelectedArrow() {
         arrowStart->outArrow1 = arrow;
     arrowEnd->inArrow = arrow;
     addItem(arrow);
+    connect(arrow, SIGNAL(clicked(Arrow*)), this, SLOT(arrowClicked(Arrow*)));
+}
+
+void DiagramScene::arrowClicked(Arrow *arrow) {
+    if (status==DeletingArrow) {
+        delete arrow;
+        selectStatus(Normal);
+    }
 }

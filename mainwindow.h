@@ -78,6 +78,7 @@ public slots:
     void deleteItemAction();
     void editTextAction();
     void resetSceneStatus();
+    void deleteArrowAction();
 
 };
 

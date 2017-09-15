@@ -13,7 +13,7 @@ class DiagramScene : public QGraphicsScene
 
 public:
     explicit DiagramScene(QObject *parent = 0);
-    enum SceneStatus {Normal, DeletingItem, EditingText, AddArrowStart, AddArrowEnd} status;
+    enum SceneStatus {Normal, DeletingItem, EditingText, AddArrowStart, AddArrowEnd, DeletingArrow} status;
     void selectStatus(SceneStatus newStatus);
     DiagramItem *editing;
 
@@ -32,6 +32,7 @@ public slots:
     void itemClicked(DiagramItem *item);
     void onTextEdited(QString text);
     void addArrow();
+    void arrowClicked(Arrow *arrow);
 };
 
 #endif // DIAGRAMSCENE_H

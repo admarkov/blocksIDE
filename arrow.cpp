@@ -7,7 +7,7 @@
 using namespace std;
 
 Arrow::Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent)
-    : QGraphicsLineItem(parent)
+    : QObject(), QGraphicsLineItem(parent)
 {
     StartItem = start;
     EndItem = end;
@@ -77,4 +77,8 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->drawLine(line());
     painter->drawPolygon(arrowHead);
 
+}
+
+void Arrow::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    emit clicked(this);
 }

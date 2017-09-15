@@ -5,8 +5,11 @@
 #include <diagramitem.h>
 #include <QPainter>
 
-class Arrow : public QGraphicsLineItem
+class Arrow : public QObject, public QGraphicsLineItem
 {
+
+    Q_OBJECT
+
 public:
 
     Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent = 0);
@@ -23,8 +26,12 @@ protected:
 
 private:
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
     QPolygonF arrowHead;
 
+signals:
+    void clicked(Arrow *arrow);
 };
 
 #endif // ARROW_H
