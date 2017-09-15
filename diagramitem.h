@@ -19,7 +19,7 @@ public:
 
     enum DiagramType {Step, Conditional, StartEnd, IO};
 
-    DiagramItem(DiagramType type, QGraphicsItem *parent = 0);
+    DiagramItem(DiagramType type, int num = 0, QGraphicsItem *parent = 0);
     ~DiagramItem();
 
     DiagramType diagramType() const { return _diagramType; }
@@ -30,6 +30,8 @@ public:
     void redraw();
 
     int width, height;
+
+    int number;
 
     QList<Arrow*> inArrows;
     Arrow *outArrow1;

@@ -17,23 +17,40 @@ void DiagramScene::addDiagramItem(DiagramItem *item) {
     connect(item, SIGNAL(clicked(DiagramItem*)), this, SLOT(itemClicked(DiagramItem*)));
 }
 
+int DiagramScene::calcnumber() {
+    int n = 0;
+    bool free=true;
+    do {
+        n++;
+        free = true;
+        for (QGraphicsItem *it : items()) {
+            if (dynamic_cast<DiagramItem*>(it)) {
+                DiagramItem *item = dynamic_cast<DiagramItem*>(it);
+                if (item->number==n)
+                    free = false;
+            }
+        }
+    } while (!free);
+    return n;
+}
+
 void DiagramScene::addStartEndItem() {
-    addDiagramItem(new DiagramItem(DiagramItem::StartEnd));
+    addDiagramItem(new DiagramItem(DiagramItem::StartEnd, calcnumber()));
     status = Normal;
 }
 
 void DiagramScene::addConditionalItem() {
-    addDiagramItem(new DiagramItem(DiagramItem::Conditional));
+    addDiagramItem(new DiagramItem(DiagramItem::Conditional, calcnumber()));
     status = Normal;
 }
 
 void DiagramScene::addStepItem() {
-    addDiagramItem(new DiagramItem(DiagramItem::Step));
+    addDiagramItem(new DiagramItem(DiagramItem::Step, calcnumber()));
     status = Normal;
 }
 
 void DiagramScene::addIOItem() {
-    addDiagramItem(new DiagramItem(DiagramItem::IO));
+    addDiagramItem(new DiagramItem(DiagramItem::IO, calcnumber()));
     status = Normal;
 }
 

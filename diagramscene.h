@@ -24,6 +24,7 @@ private:
     QObject *w;
     DiagramItem *arrowStart, *arrowEnd;
     void addSelectedArrow();
+    int calcnumber();
 
 public slots:
     void addStartEndItem();

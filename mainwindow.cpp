@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 #include "diagramscene.h"
 #include "diagramitem.h"
-
+#include "arrow.h"
 #include <QDebug>
 #include <QStatusBar>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextStream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -32,6 +35,9 @@ void MainWindow::setupUi()
     view->setGeometry(QRect(0, 0, w, h-45));
     view->setScene(scene);
 
+    connect(scene, SIGNAL(changed(QList<QRectF>)), this, SLOT(sceneChanged()));
+    unsavedChanges = false;
+
     menuBar = new QMenuBar(this);
     menuBar->setObjectName(QStringLiteral("menuBar"));
     menuBar->setGeometry(QRect(0, 0, w, 25));
@@ -52,15 +58,18 @@ void MainWindow::setupUi()
     menuFile_new = new QAction(this);
     menuFile_new->setObjectName(QStringLiteral("menuFile_new"));
     menuFile->addAction(menuFile_new);
+    connect(menuFile_new, SIGNAL(triggered(bool)), this, SLOT(newDiagram()));
     menuFile_open = new QAction(this);
     menuFile_open->setObjectName(QStringLiteral("menuFile_open"));
     menuFile->addAction(menuFile_open);
     menuFile_save = new QAction(this);
     menuFile_save->setObjectName(QStringLiteral("menuFile_save"));
     menuFile->addAction(menuFile_save);
+    connect(menuFile_save, SIGNAL(triggered(bool)), this, SLOT(saveDiagram()));
     menuFile_saveas = new QAction(this);
     menuFile_saveas->setObjectName(QStringLiteral("menuFile_saveas"));
     menuFile->addAction(menuFile_saveas);
+    connect(menuFile_saveas, SIGNAL(triggered(bool)), this, SLOT(saveDiagramAs()));
 
     menuEdit->addMenu(menuBlocks);
     menuEdit_addConnection = new QAction(this);
@@ -128,6 +137,10 @@ void MainWindow::setupUi()
     lineEditor->hide();
     editorbtn->hide();
 
+    File = nullptr;
+
+    //qDebug()<<QFileDialog::getSaveFileName(0, "Сохранить диаграму", "", "*.diag");
+
     retranslateUi();
 
     QMetaObject::connectSlotsByName(this);
@@ -135,7 +148,7 @@ void MainWindow::setupUi()
 
 void MainWindow::retranslateUi()
 {
-    setWindowTitle(tr("Diagram IDE"));
+    setWindowTitle(tr("Diagram IDE | Untitled"));
 
     menuFile_new->setText(tr("Новая"));
     menuFile_open->setText(tr("Открыть"));
@@ -179,6 +192,69 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
 void MainWindow::deleteArrowAction() {
     scene->selectStatus(DiagramScene::DeletingArrow);
+}
+
+void MainWindow::saveDiagram() {
+    if (File==nullptr) {
+        saveDiagramAs();
+        return;
+    }
+    File->open(QIODevice::WriteOnly);
+    QTextStream file(File);
+    file<<scene->items().size()/2<<"\n";
+    for (QGraphicsItem *item : scene->items()) {
+        if (dynamic_cast<DiagramItem*>(item)) {
+            DiagramItem *it = dynamic_cast<DiagramItem*>(item);
+            file<<"item\n";
+            file<<it->number<<"\n";
+            file<<it->pos().x()<<" "<<it->pos().y()<<"\n";
+            file<<(it->Text().isEmpty()?"$NO_TEXT$":it->Text())<<"\n";
+        }
+        else if (dynamic_cast<Arrow*>(item)) {
+            Arrow *ar = dynamic_cast<Arrow*>(item);
+            file<<"arrow\n";
+            file<<ar->StartItem->number<<" "<<ar->EndItem->number<<"\n";
+            file<<(ar->Text().isEmpty()?"$NO_TEXT$":ar->Text())<<"\n";
+        }
+    }
+    unsavedChanges = false;
+    if (windowTitle()[windowTitle().length()-1]=='*') {
+        QString title = "";
+        for (int i=0; i<windowTitle().length()-1; i++)
+            title+=windowTitle()[i];
+        setWindowTitle(title);
+    }
+    File->close();
+}
+
+void MainWindow::saveDiagramAs() {
+    if (File!=nullptr) {
+        delete File;
+        File = nullptr;
+    }
+    QString path = QFileDialog::getSaveFileName(0, "Сохранить диаграму", "", "*.diag");
+    if (!path.count(".diag"))
+        path+=".diag";
+    if (path!=".diag") {
+        File = new QFile(path);
+        setWindowTitle("Diagram IDE | " + File->fileName());
+        saveDiagram();
+    }
+}
+
+void MainWindow::newDiagram() {
+    delete File;
+    File = nullptr;
+    setWindowTitle("Diagram IDE | Untitled");
+    for (QGraphicsItem *item : scene->items()) {
+        scene->removeItem(item);
+    }
+}
+
+void MainWindow::sceneChanged() {
+    unsavedChanges = true;
+    if (windowTitle()[windowTitle().length()-1]!='*')
+        setWindowTitle(windowTitle()+"*");
 }
 
 MainWindow::~MainWindow()

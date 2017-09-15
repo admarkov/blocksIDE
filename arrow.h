@@ -11,7 +11,7 @@ class Arrow;
 class ArrowText : public QGraphicsTextItem {
 public:
     ArrowText(Arrow *arr, QGraphicsItem *parent = 0);
-    Arrow *arrow;
+    Arrow *arrow; 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
@@ -31,6 +31,9 @@ public:
     ArrowText *textItem;
 
     void updatePosition();
+
+    QString Text() const { return textItem->toPlainText(); }
+    void setText(QString s) const { textItem->setPlainText(s); }
 
     QPainterPath shape() const override ;
     QRectF boundingRect() const override ;

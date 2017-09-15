@@ -5,7 +5,7 @@
 #include "arrow.h"
 #include "mainwindow.h"
 
-DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), QGraphicsPolygonItem(parent)
+DiagramItem::DiagramItem(DiagramType type, int num, QGraphicsItem *parent) : QObject(), QGraphicsPolygonItem(parent)
 {
     outArrow1 = outArrow2 = nullptr;
     _diagramType = type;
@@ -13,7 +13,9 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     textItem = new QGraphicsTextItem(this);
+    number = num;
     redraw();
+
 }
 
 DiagramItem::~DiagramItem() {

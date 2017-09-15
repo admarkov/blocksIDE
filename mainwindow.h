@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QString>
+#include <QFile>
 #include "diagramscene.h"
 
 class MainWindow : public QMainWindow
@@ -73,12 +74,19 @@ public:
 
     void keyPressEvent(QKeyEvent *event);
 
+    QFile *File;
+    bool unsavedChanges;
+
 public slots:
 
     void deleteItemAction();
     void editTextAction();
     void resetSceneStatus();
     void deleteArrowAction();
+    void sceneChanged();
+    void saveDiagram();
+    void saveDiagramAs();
+    void newDiagram();
 
 };
 
