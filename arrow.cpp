@@ -27,7 +27,11 @@ Arrow::Arrow(DiagramItem *start, DiagramItem *end, QGraphicsItem *parent)
 }
 
 Arrow::~Arrow() {
-    EndItem->inArrow = nullptr;
+    QList<Arrow*>::iterator toErase;
+    for (auto it = EndItem->inArrows.begin(); it!=EndItem->inArrows.end(); it++)
+        if ((*it)==this)
+            toErase = it;
+    EndItem->inArrows.erase(toErase, toErase+1);
     if (StartItem->outArrow1==this)
         StartItem->outArrow1 = nullptr;
     if (StartItem->outArrow2==this)

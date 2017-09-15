@@ -7,7 +7,7 @@
 
 DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), QGraphicsPolygonItem(parent)
 {
-    inArrow = outArrow1 = outArrow2 = nullptr;
+    outArrow1 = outArrow2 = nullptr;
     _diagramType = type;
     setBrush(QBrush(Qt::white));
     setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -18,9 +18,10 @@ DiagramItem::DiagramItem(DiagramType type, QGraphicsItem *parent) : QObject(), Q
 
 DiagramItem::~DiagramItem() {
     delete textItem;
-    if (inArrow!=nullptr) {
-        delete inArrow;
+    for (Arrow* arrow : inArrows) {
+        delete arrow;
     }
+    inArrows.erase(inArrows.begin(), inArrows.end());
     if (outArrow1!=nullptr) {
         delete outArrow1;
     }
@@ -97,8 +98,9 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &valu
              outArrow1->updatePosition();
          if (outArrow2!=nullptr)
              outArrow2->updatePosition();
-         if (inArrow!=nullptr)
+         for (Arrow* inArrow : inArrows) {
              inArrow->updatePosition();
+         }
      }
      return QGraphicsItem::itemChange(change, value);
 }

@@ -6,6 +6,7 @@
 #include <QPaintEvent>
 #include <QObject>
 #include <QGraphicsTextItem>
+#include <QList>
 
 class Arrow;
 
@@ -30,7 +31,7 @@ public:
 
     int width, height;
 
-    Arrow *inArrow;
+    QList<Arrow*> inArrows;
     Arrow *outArrow1;
     Arrow *outArrow2;
 

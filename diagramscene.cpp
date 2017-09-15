@@ -88,7 +88,7 @@ void DiagramScene::itemClicked(DiagramItem *item) {
         }
     }
     if (status==AddArrowEnd) {
-        if (item->inArrow==nullptr && item!=arrowStart) {
+        if (item!=arrowStart) {
             arrowEnd = item;
             addSelectedArrow();
             selectStatus(Normal);
@@ -189,7 +189,7 @@ void DiagramScene::addSelectedArrow() {
         arrowStart->outArrow2 = arrow;
     else
         arrowStart->outArrow1 = arrow;
-    arrowEnd->inArrow = arrow;
+    arrowEnd->inArrows.append(arrow);
     addItem(arrow);
     connect(arrow, SIGNAL(clicked(Arrow*)), this, SLOT(arrowClicked(Arrow*)));
 }
