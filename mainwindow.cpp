@@ -217,6 +217,7 @@ void MainWindow::saveDiagram() {
             file<<(ar->Text().isEmpty()?"$NO_TEXT$":ar->Text())<<"\n";
         }
     }
+    File->close();
     unsavedChanges = false;
     if (windowTitle()[windowTitle().length()-1]=='*') {
         QString title = "";
@@ -224,7 +225,6 @@ void MainWindow::saveDiagram() {
             title+=windowTitle()[i];
         setWindowTitle(title);
     }
-    File->close();
 }
 
 void MainWindow::saveDiagramAs() {
@@ -255,6 +255,25 @@ void MainWindow::sceneChanged() {
     unsavedChanges = true;
     if (windowTitle()[windowTitle().length()-1]!='*')
         setWindowTitle(windowTitle()+"*");
+}
+
+void MainWindow::closeEvent(QCloseEvent *e) {
+    if (unsavedChanges) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, QString::fromUtf8("Предупреждение"),
+                              QString::fromUtf8("Имеются несохраненные изменения. Сохранить перед завершением?"),
+                              QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (reply == QMessageBox::Yes) {
+            saveDiagram();
+            e->accept();
+        }
+        else if (reply == QMessageBox::No) {
+            e->accept();
+        }
+        else {
+            e->ignore();
+        }
+    }
 }
 
 MainWindow::~MainWindow()

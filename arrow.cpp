@@ -87,8 +87,6 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->setPen(pen());
     painter->setBrush(Qt::black);
 
-    updatePosition();
-
     double Pi = M_PI;
 
     double angle = std::acos(line().dx() / line().length());

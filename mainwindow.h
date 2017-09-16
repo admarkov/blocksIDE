@@ -77,6 +77,9 @@ public:
     QFile *File;
     bool unsavedChanges;
 
+protected:
+    void closeEvent(QCloseEvent *e);
+
 public slots:
 
     void deleteItemAction();
