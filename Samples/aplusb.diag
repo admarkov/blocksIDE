@@ -1,0 +1,39 @@
+9
+arrow
+4 5
+$NO_TEXT$
+arrow
+3 4
+$NO_TEXT$
+arrow
+2 3
+$NO_TEXT$
+arrow
+1 2
+$NO_TEXT$
+item
+5
+StartEnd
+442 567
+end
+item
+4
+IO
+440 435
+print sum
+item
+3
+Step
+439 307
+sum = a + b
+item
+2
+IO
+440 178
+read a
+read b
+item
+1
+StartEnd
+439 50
+begin
