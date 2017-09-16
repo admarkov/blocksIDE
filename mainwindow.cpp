@@ -235,7 +235,7 @@ void MainWindow::saveDiagramAs() {
         delete File;
         File = nullptr;
     }
-    QString path = QFileDialog::getSaveFileName(0, "Сохранить диаграму", "", "*.diag");
+    QString path = QFileDialog::getSaveFileName(0, "Сохранить диаграмму", "", "*.diag");
     if (!path.count(".diag"))
         path+=".diag";
     if (path!=".diag") {
@@ -274,7 +274,7 @@ struct fileArrow {
 };
 
 void MainWindow::openDiagram() {
-    QString path = QFileDialog::getOpenFileName();
+    QString path = QFileDialog::getOpenFileName(0, "Открыть диаграмму", "", "*.diag");
     if (QFile::exists(path)) {
         newDiagram();
         File = new QFile(path);
