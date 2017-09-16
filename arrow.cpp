@@ -83,6 +83,7 @@ QPainterPath Arrow::shape() const
 }
 
 void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget ) {
+    updatePosition();
     qreal arrowSize = 8;
     painter->setPen(pen());
     painter->setBrush(Qt::black);

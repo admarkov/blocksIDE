@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
+#include <map>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -62,6 +63,7 @@ void MainWindow::setupUi()
     menuFile_open = new QAction(this);
     menuFile_open->setObjectName(QStringLiteral("menuFile_open"));
     menuFile->addAction(menuFile_open);
+    connect(menuFile_open, SIGNAL(triggered(bool)),this, SLOT(openDiagram()));
     menuFile_save = new QAction(this);
     menuFile_save->setObjectName(QStringLiteral("menuFile_save"));
     menuFile->addAction(menuFile_save);
@@ -207,6 +209,14 @@ void MainWindow::saveDiagram() {
             DiagramItem *it = dynamic_cast<DiagramItem*>(item);
             file<<"item\n";
             file<<it->number<<"\n";
+            if (it->diagramType()==DiagramItem::StartEnd)
+                file<<"StartEnd\n";
+            if (it->diagramType()==DiagramItem::Conditional)
+                file<<"Conditional\n";
+            if (it->diagramType()==DiagramItem::IO)
+                file<<"IO\n";
+            if (it->diagramType()==DiagramItem::Step)
+                file<<"Step\n";
             file<<it->pos().x()<<" "<<it->pos().y()<<"\n";
             file<<(it->Text().isEmpty()?"$NO_TEXT$":it->Text())<<"\n";
         }
@@ -218,13 +228,6 @@ void MainWindow::saveDiagram() {
         }
     }
     File->close();
-    unsavedChanges = false;
-    if (windowTitle()[windowTitle().length()-1]=='*') {
-        QString title = "";
-        for (int i=0; i<windowTitle().length()-1; i++)
-            title+=windowTitle()[i];
-        setWindowTitle(title);
-    }
 }
 
 void MainWindow::saveDiagramAs() {
@@ -243,7 +246,20 @@ void MainWindow::saveDiagramAs() {
 }
 
 void MainWindow::newDiagram() {
-    delete File;
+   /* if (unsavedChanges) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, QString::fromUtf8("Предупреждение"),
+                              QString::fromUtf8("Имеются несохраненные изменения. Сохранить?"),
+                              QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        if (reply == QMessageBox::Yes) {
+            saveDiagram();
+        }
+        else if (reply == QMessageBox::Cancel) {
+            return;
+        }
+    }*/
+    if (File!=nullptr)
+        delete File;
     File = nullptr;
     setWindowTitle("Diagram IDE | Untitled");
     for (QGraphicsItem *item : scene->items()) {
@@ -251,14 +267,89 @@ void MainWindow::newDiagram() {
     }
 }
 
+struct fileArrow {
+    int from, to;
+    QString text;
+    fileArrow(int f, int t, QString txt) : from(f), to(t), text(txt) { }
+};
+
+void MainWindow::openDiagram() {
+    QString path = QFileDialog::getOpenFileName();
+    if (QFile::exists(path)) {
+        newDiagram();
+        File = new QFile(path);
+        setWindowTitle("Diagram IDE | " + File->fileName());
+        File->open(QIODevice::ReadOnly);
+        QTextStream file(File);
+        QString itemType;
+        QList<fileArrow> arrows;
+        std::map<int, DiagramItem*> numberToItem;
+        QString line;
+        while (!file.atEnd()) {
+            itemType = file.readLine();
+            if (itemType == "arrow") {
+                int to, from;
+                QString text;
+                line = file.readLine();
+                from = line.split(" ").at(1).toInt();
+                to = line.split(" ").at(0).toInt();
+                text = file.readLine();
+                arrows.append(fileArrow(to, from, text));
+            }
+            else if (itemType == "item") {
+                int n;
+                qreal x, y;
+                QString type, text;
+                n = file.readLine().toInt();
+                type = file.readLine();
+                line = file.readLine();
+                x = line.split(" ").at(0).toDouble();
+                y = line.split(" ").at(1).toDouble();
+                text = file.readLine();
+                DiagramItem *item;
+                if (type=="StartEnd")
+                    item = new DiagramItem(DiagramItem::StartEnd,n);
+                if (type=="Conditional")
+                    item = new DiagramItem(DiagramItem::Conditional,n);
+                if (type=="IO")
+                    item = new DiagramItem(DiagramItem::IO,n);
+                if (type=="Step")
+                    item = new DiagramItem(DiagramItem::Step,n);
+                item->setPos(x, y);
+                if (text!="$NO_TEXT$")
+                    item->setText(text);
+                item->setPos(x,y);
+                scene->addItem(item);
+                connect(item, SIGNAL(positionChanged(DiagramItem*,QPointF)), scene, SLOT(itemPositionChanged(DiagramItem*,QPointF)));
+                connect(item, SIGNAL(clicked(DiagramItem*)), scene, SLOT(itemClicked(DiagramItem*)));
+                numberToItem[n] = item;
+            }
+        }
+        File->close();
+        for (fileArrow farrow : arrows) {
+            DiagramItem *arrowStart = numberToItem[farrow.from];
+            DiagramItem *arrowEnd = numberToItem[farrow.to];
+            Arrow *arrow = new Arrow(arrowStart, arrowEnd);
+            if (arrowStart->outArrow1!=nullptr)
+                arrowStart->outArrow2 = arrow;
+            else
+                arrowStart->outArrow1 = arrow;
+            arrowEnd->inArrows.append(arrow);
+            scene->addItem(arrow);
+            connect(arrow, SIGNAL(clicked(Arrow*)), scene, SLOT(arrowClicked(Arrow*)));
+            if (farrow.text!="$NO_TEXT$")
+                arrow->setText(farrow.text);
+        }
+        scene->itemPositionChanged();
+    }
+}
+
 void MainWindow::sceneChanged() {
-    unsavedChanges = true;
-    if (windowTitle()[windowTitle().length()-1]!='*')
-        setWindowTitle(windowTitle()+"*");
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *e) {
-    if (unsavedChanges) {
+   /* if (unsavedChanges) {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, QString::fromUtf8("Предупреждение"),
                               QString::fromUtf8("Имеются несохраненные изменения. Сохранить перед завершением?"),
@@ -273,7 +364,8 @@ void MainWindow::closeEvent(QCloseEvent *e) {
         else {
             e->ignore();
         }
-    }
+    }*/
+    e->accept();
 }
 
 MainWindow::~MainWindow()

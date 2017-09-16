@@ -90,6 +90,7 @@ public slots:
     void saveDiagram();
     void saveDiagramAs();
     void newDiagram();
+    void openDiagram();
 
 };
 

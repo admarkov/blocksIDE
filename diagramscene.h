@@ -31,7 +31,7 @@ public slots:
     void addConditionalItem();
     void addStepItem();
     void addIOItem();
-    void itemPositionChanged(DiagramItem *item, QPointF newPos);
+    void itemPositionChanged(DiagramItem *item = nullptr, QPointF newPos = QPointF(0,0));
     void itemClicked(DiagramItem *item);
     void onTextEdited(QString text);
     void addArrow();
