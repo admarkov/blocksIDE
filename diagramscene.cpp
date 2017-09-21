@@ -142,6 +142,7 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->statusBar->clearMessage();
         W->lineEditor->hide();
         W->editorbtn->hide();
+        W->varTable->hide();
         if (check()) {
             W->menuRun->setEnabled(true);
             W->menuRun_auto->setEnabled(true);
@@ -173,6 +174,16 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         }
         if (newStatus==AddArrowEnd) {
             W->statusBar->showMessage("Нажмите на входящий узел. Для отмены нажмите Esc.");
+        }
+        if (newStatus==RunningAuto || newStatus==RunningManual) {
+            while (W->varTable->rowCount()>0)
+                W->varTable->removeRow(0);
+            W->varTable->show();
+            W->menuRun->setEnabled(true);
+            W->menuRun_auto->setEnabled(false);
+            W->menuRun_manual->setEnabled(false);
+            W->menuRun_stop->setEnabled(true);
+            run();
         }
     }
     status = newStatus;
@@ -290,4 +301,8 @@ bool DiagramScene::check() {
         }
     }
     return true;
+}
+
+void DiagramScene::run() {
+
 }

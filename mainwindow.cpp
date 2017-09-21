@@ -112,14 +112,17 @@ void MainWindow::setupUi()
     menuRun_manual = new QAction(this);
     menuRun_manual->setObjectName(QStringLiteral("menuRun_manual"));
     menuRun->addAction(menuRun_manual);
+    connect(menuRun_manual, SIGNAL(triggered(bool)), this, SLOT(runManual()));
     menuRun_auto = new QAction(this);
     menuRun_auto->setObjectName(QStringLiteral("menuRun_auto"));
     menuRun->addAction(menuRun_auto);
+    connect(menuRun_auto, SIGNAL(triggered(bool)), this, SLOT(runAuto()));
     menuRun->addSeparator();
     menuRun_stop = new QAction(this);
     menuRun_stop->setObjectName(QStringLiteral("menuRun_stop"));
     menuRun->addAction(menuRun_stop);
     menuRun_stop->setEnabled(false);
+    connect(menuRun_stop, SIGNAL(triggered(bool)), this, SLOT(stopRunning()));
 
     statusBar = new QStatusBar(this);
     setStatusBar(statusBar);
@@ -143,7 +146,6 @@ void MainWindow::setupUi()
     varTable = new QTableWidget(this);
     varTable->setGeometry(w-280, 25, 280, h-46);
     varTable->setColumnCount(2);
-    varTable->insertRow(0);
     varTable->setColumnWidth(1, 140);
     QStringList tableHeader;
     tableHeader<<"Переменная"<<"Значение";
@@ -203,7 +205,7 @@ void MainWindow::resetSceneStatus() {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-    if (event->key()==Qt::Key_Escape) {
+    if (event->key()==Qt::Key_Escape && scene->status!=DiagramScene::RunningManual && scene->status!=DiagramScene::RunningAuto) {
         scene->selectStatus(DiagramScene::Normal);
     }
 }
@@ -383,6 +385,18 @@ void MainWindow::closeEvent(QCloseEvent *e) {
         }
     }*/
     e->accept();
+}
+
+void MainWindow::runAuto() {
+    scene->selectStatus(DiagramScene::RunningAuto);
+}
+
+void MainWindow::runManual() {
+    scene->selectStatus(DiagramScene::RunningManual);
+}
+
+void MainWindow::stopRunning() {
+    scene->selectStatus(DiagramScene::Normal);
 }
 
 MainWindow::~MainWindow()

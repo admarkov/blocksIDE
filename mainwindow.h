@@ -94,6 +94,9 @@ public slots:
     void saveDiagramAs();
     void newDiagram();
     void openDiagram();
+    void runManual();
+    void runAuto();
+    void stopRunning();
 
 };
 

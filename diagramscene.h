@@ -15,11 +15,12 @@ class DiagramScene : public QGraphicsScene
 
 public:
     explicit DiagramScene(QObject *parent = 0);
-    enum SceneStatus {Normal, DeletingItem, EditingText, AddArrowStart, AddArrowEnd, DeletingArrow} status;
+    enum SceneStatus {Normal, DeletingItem, EditingText, AddArrowStart, AddArrowEnd, DeletingArrow, RunningManual, RunningAuto} status;
     void selectStatus(SceneStatus newStatus);
     DiagramItem *editingItem;
     Arrow *editingArrow;
     bool check();
+    void run();
 
 private:
     bool check_dfs(DiagramItem *item);
