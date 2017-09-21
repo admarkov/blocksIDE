@@ -19,21 +19,15 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::setupUi()
 {
 
-    if (this->objectName().isEmpty())
-        this->setObjectName(QStringLiteral("MainWindow"));
-
     this->setFixedSize(w, h);
 
     centralWidget = new QWidget(this);
-    centralWidget->setObjectName(QStringLiteral("centralWidget"));
     this->setCentralWidget(centralWidget);
 
     scene = new DiagramScene(this);
-    scene->setObjectName(QStringLiteral("scene"));
     scene->setSceneRect(0, 0, w-10, h-47);
 
     view = new QGraphicsView(centralWidget);
-    view->setObjectName(QStringLiteral("view"));
     view->setGeometry(QRect(0, 0, w, h-45));
     view->setScene(scene);
 
@@ -41,85 +35,65 @@ void MainWindow::setupUi()
     unsavedChanges = false;
 
     menuBar = new QMenuBar(this);
-    menuBar->setObjectName(QStringLiteral("menuBar"));
     menuBar->setGeometry(QRect(0, 0, w, 25));
     menuFile = new QMenu(menuBar);
-    menuFile->setObjectName(QStringLiteral("menuFile"));
     menuBar->addAction(menuFile->menuAction());
     menuEdit = new QMenu(menuBar);
-    menuEdit->setObjectName(QStringLiteral("menuEdit"));
     menuBar->addAction(menuEdit->menuAction());
     menuBlocks = new QMenu(menuEdit);
-    menuBlocks->setObjectName(QStringLiteral("menuBlocks"));
     menuRun = new QMenu(menuBar);
-    menuRun->setObjectName(QStringLiteral("menuRun"));
     menuRun->setEnabled(false);
     menuBar->addAction(menuRun->menuAction());
     setMenuBar(menuBar);
 
     menuFile_new = new QAction(this);
-    menuFile_new->setObjectName(QStringLiteral("menuFile_new"));
     menuFile->addAction(menuFile_new);
     connect(menuFile_new, SIGNAL(triggered(bool)), this, SLOT(newDiagram()));
     menuFile_open = new QAction(this);
-    menuFile_open->setObjectName(QStringLiteral("menuFile_open"));
     menuFile->addAction(menuFile_open);
     connect(menuFile_open, SIGNAL(triggered(bool)),this, SLOT(openDiagram()));
     menuFile_save = new QAction(this);
-    menuFile_save->setObjectName(QStringLiteral("menuFile_save"));
     menuFile->addAction(menuFile_save);
     connect(menuFile_save, SIGNAL(triggered(bool)), this, SLOT(saveDiagram()));
     menuFile_saveas = new QAction(this);
-    menuFile_saveas->setObjectName(QStringLiteral("menuFile_saveas"));
     menuFile->addAction(menuFile_saveas);
     connect(menuFile_saveas, SIGNAL(triggered(bool)), this, SLOT(saveDiagramAs()));
 
     menuEdit->addMenu(menuBlocks);
     menuEdit_addConnection = new QAction(this);
-    menuEdit_addConnection->setObjectName(QStringLiteral("menuEdit_addConnection"));
     menuEdit->addAction(menuEdit_addConnection);
     connect(menuEdit_addConnection, SIGNAL(triggered(bool)), scene, SLOT(addArrow()));
     menuEdit_delItem = new QAction(this);
-    menuEdit_delItem->setObjectName(QStringLiteral("menuEdit_delItem"));
     connect(menuEdit_delItem, SIGNAL(triggered()), this, SLOT(deleteItemAction()));
     menuEdit->addAction(menuEdit_delItem);
     menuEdit_delConnection = new QAction(this);
-    menuEdit_delConnection->setObjectName(QStringLiteral("menuEdit_delConnection"));
     menuEdit->addAction(menuEdit_delConnection);
     connect(menuEdit_delConnection, SIGNAL(triggered()), this, SLOT(deleteArrowAction()));
     menuEdit_editText= new QAction(this);
-    menuEdit_editText->setObjectName(QStringLiteral("menuEdit_editText"));
     menuEdit->addAction(menuEdit_editText);
     connect(menuEdit_editText, SIGNAL(triggered()), this, SLOT(editTextAction()));
 
     menuBlocks_begend = new QAction(this);
-    menuBlocks_begend->setObjectName(QStringLiteral("menuBlocks_begend"));
     menuBlocks->addAction(menuBlocks_begend);
     connect(menuBlocks_begend, SIGNAL(triggered()), scene, SLOT(addStartEndItem()));
     menuBlocks_action = new QAction(this);
-    menuBlocks_action->setObjectName(QStringLiteral("menuBlocks_action"));
     menuBlocks->addAction(menuBlocks_action);
     connect(menuBlocks_action, SIGNAL(triggered()), scene, SLOT(addStepItem()));
     menuBlocks_if = new QAction(this);
-    menuBlocks_if->setObjectName(QStringLiteral("menuBlocks_if"));
     menuBlocks->addAction(menuBlocks_if);
     connect(menuBlocks_if, SIGNAL(triggered()), scene, SLOT(addConditionalItem()));
     menuBlocks_io = new QAction(this);
-    menuBlocks_io->setObjectName(QStringLiteral("menuBlocks_io"));
     menuBlocks->addAction(menuBlocks_io);
     connect(menuBlocks_io, SIGNAL(triggered()), scene, SLOT(addIOItem()));
 
     menuRun_manual = new QAction(this);
-    menuRun_manual->setObjectName(QStringLiteral("menuRun_manual"));
     menuRun->addAction(menuRun_manual);
     connect(menuRun_manual, SIGNAL(triggered(bool)), this, SLOT(runManual()));
     menuRun_auto = new QAction(this);
-    menuRun_auto->setObjectName(QStringLiteral("menuRun_auto"));
     menuRun->addAction(menuRun_auto);
     connect(menuRun_auto, SIGNAL(triggered(bool)), this, SLOT(runAuto()));
     menuRun->addSeparator();
     menuRun_stop = new QAction(this);
-    menuRun_stop->setObjectName(QStringLiteral("menuRun_stop"));
     menuRun->addAction(menuRun_stop);
     menuRun_stop->setEnabled(false);
     connect(menuRun_stop, SIGNAL(triggered(bool)), this, SLOT(stopRunning()));
@@ -185,7 +159,6 @@ void MainWindow::retranslateUi()
     menuRun_manual->setText(tr("Пошаговый"));
     menuRun_auto->setText(tr("Непрерывный"));
     menuRun_stop->setText(tr("Стоп"));
-
     menuFile->setTitle(tr("Файл"));
     menuEdit->setTitle(tr("Редактировать"));
     menuBlocks->setTitle(tr("Добавить узел"));
