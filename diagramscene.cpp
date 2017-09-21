@@ -142,7 +142,15 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->statusBar->clearMessage();
         W->lineEditor->hide();
         W->editorbtn->hide();
-        //updateRunnable();
+        if (check()) {
+            W->menuRun->setEnabled(true);
+            W->menuRun_auto->setEnabled(true);
+            W->menuRun_manual->setEnabled(true);
+            W->menuRun_stop->setEnabled(false);
+        }
+        else {
+            W->menuRun->setEnabled(false);
+        }
     }
     else {
         W->menuFile->setEnabled(false);
@@ -209,4 +217,77 @@ void DiagramScene::addSelectedArrow() {
     arrowEnd->inArrows.append(arrow);
     addItem(arrow);
     connect(arrow, SIGNAL(clicked(Arrow*)), this, SLOT(arrowClicked(Arrow*)));
+}
+
+bool DiagramScene::check_dfs(DiagramItem *item) {
+    if (used[item])
+        return true;
+    used[item] = true;
+    switch (item->diagramType()) {
+
+    case DiagramItem::StartEnd:
+    {
+        if (item->Text()=="begin") {
+            if (item->inArrows.size()>0)
+                return false;
+        }
+        else if (item->Text()=="end") {
+            if (item->outArrow1!=nullptr || item->outArrow2!=nullptr) {
+                return false;
+            }
+            return true;
+        }
+        else
+            return false;
+        break;
+    }
+    case DiagramItem::Step:
+    {
+        if (item->outArrow1==nullptr && item->outArrow2==nullptr)
+            return false;
+        break;
+    }
+    case DiagramItem::Conditional:
+    {
+        if (item->outArrow1==nullptr && item->outArrow2==nullptr)
+            return false;
+        break;
+    }
+    case DiagramItem::IO:
+    {
+        if (item->outArrow1==nullptr && item->outArrow2==nullptr)
+            return false;
+        break;
+    }
+
+    }
+
+    return ((item->outArrow1==nullptr?true:check_dfs(item->outArrow1->EndItem)) && (item->outArrow2==nullptr?true:check_dfs(item->outArrow2->EndItem)));
+}
+
+bool DiagramScene::check() {
+    DiagramItem *start = nullptr;
+    for (QGraphicsItem *item : items()) {     //Находим начальный узел, заодно проверяем его единственность
+        if (dynamic_cast<DiagramItem*>(item)) {
+            DiagramItem *it = dynamic_cast<DiagramItem*>(item);
+            if (it->diagramType() == DiagramItem::StartEnd && it->Text()=="begin") {
+                if (start==nullptr)
+                    start = it;
+                else
+                    return false;
+            }
+        }
+    }
+    used.clear();
+    used[nullptr] = true;
+    if (!check_dfs(start))
+        return false;
+    for (QGraphicsItem *it: items()) {
+        DiagramItem *item;
+        if (item = dynamic_cast<DiagramItem*>(it)) {
+            if (!used[item])
+                return false;
+        }
+    }
+    return true;
 }

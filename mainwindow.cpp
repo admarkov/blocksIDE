@@ -341,6 +341,7 @@ void MainWindow::openDiagram() {
                 arrow->setText(farrow.text);
         }
         scene->itemPositionChanged();
+        scene->selectStatus(DiagramScene::Normal);
     }
 }
 

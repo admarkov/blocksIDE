@@ -6,6 +6,7 @@
 #include "arrow.h"
 #include <QLabel>
 #include <QStatusBar>
+#include <map>
 
 class DiagramScene : public QGraphicsScene
 {
@@ -18,13 +19,16 @@ public:
     void selectStatus(SceneStatus newStatus);
     DiagramItem *editingItem;
     Arrow *editingArrow;
+    bool check();
 
 private:
+    bool check_dfs(DiagramItem *item);
     void addDiagramItem(DiagramItem *item);
     QObject *w;
     DiagramItem *arrowStart, *arrowEnd;
     void addSelectedArrow();
     int calcnumber();
+    std::map<DiagramItem*, bool> used;
 
 public slots:
     void addStartEndItem();
