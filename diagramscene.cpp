@@ -143,6 +143,7 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->lineEditor->hide();
         W->editorbtn->hide();
         W->varTable->hide();
+        W->view->setGeometry(0,0, W->w, W->h-45);
         if (check()) {
             W->menuRun->setEnabled(true);
             W->menuRun_auto->setEnabled(true);
@@ -183,6 +184,7 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
             W->menuRun_auto->setEnabled(false);
             W->menuRun_manual->setEnabled(false);
             W->menuRun_stop->setEnabled(true);
+            W->view->setGeometry(0,0, W->w-280, W->h-45);
             run();
         }
     }

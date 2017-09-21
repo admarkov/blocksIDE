@@ -256,6 +256,7 @@ void MainWindow::newDiagram() {
     for (QGraphicsItem *item : scene->items()) {
         scene->removeItem(item);
     }
+    scene->setSceneRect(0,0,w,h-47);
 }
 
 struct fileArrow {
