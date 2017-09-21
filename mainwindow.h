@@ -12,6 +12,7 @@
 #include <QLineEdit>
 #include <QString>
 #include <QFile>
+#include <QTableWidget>
 #include "diagramscene.h"
 
 class MainWindow : public QMainWindow
@@ -67,6 +68,8 @@ public:
 
     QLineEdit *lineEditor;
     QPushButton *editorbtn;
+
+    QTableWidget *varTable;
 
     void setupUi();
 

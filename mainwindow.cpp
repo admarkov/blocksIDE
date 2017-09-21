@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QHeaderView>
 #include <map>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -138,6 +139,21 @@ void MainWindow::setupUi()
 
     lineEditor->hide();
     editorbtn->hide();
+
+    varTable = new QTableWidget(this);
+    varTable->setGeometry(w-280, 25, 280, h-46);
+    varTable->setColumnCount(2);
+    varTable->insertRow(0);
+    varTable->setColumnWidth(1, 140);
+    QStringList tableHeader;
+    tableHeader<<"Переменная"<<"Значение";
+    varTable->setHorizontalHeaderLabels(tableHeader);
+    varTable->verticalHeader()->hide();
+    varTable->setSelectionMode(QAbstractItemView::NoSelection);
+    varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    varTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+
+    varTable->hide();
 
     File = nullptr;
 
