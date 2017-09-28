@@ -258,12 +258,66 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
     {
         if (item->outArrow1==nullptr && item->outArrow2==nullptr)
             return false;
+
+        QStringList lines = item->Text().split('\n');
+        for (QString line : lines) {
+            if (line.count('=')!=1)
+                return false;
+            string varname = line.split('=')[0].toStdString();
+            for (int i=0; i<varname.length(); i++) {
+                if (isspace(varname[i]))
+                {
+                    varname.erase(i,1);
+                    i--;
+                }
+            }
+            string linexpr = line.split('=')[1].toStdString();
+            for (int i=0; i<linexpr.length(); i++) {
+                if (isspace(linexpr[i]))
+                {
+                    linexpr.erase(i,1);
+                    i--;
+                }
+            }
+          try
+          {
+            if (!vardefined[varname]) {
+                vardefined[varname] = true;
+                parser.DefineVar(varname, &varvalue[varname]);
+            }
+            parser.SetExpr(linexpr);
+            qDebug()<<parser.Eval();
+          }
+          catch (Parser::exception_type &e)
+          {
+                qDebug()<<QString::fromStdString(linexpr)<<QString::fromStdString(e.GetMsg());
+            return false;
+          }
+        }
         break;
     }
     case DiagramItem::Conditional:
     {
         if (item->outArrow1==nullptr && item->outArrow2==nullptr)
             return false;
+        string linexpr = item->Text().toStdString();
+        for (int i=0; i<linexpr.length(); i++) {
+            if (isspace(linexpr[i]))
+            {
+                linexpr.erase(i,1);
+                i--;
+            }
+        }
+        try
+        {
+          parser.SetExpr(linexpr);
+          qDebug()<<parser.Eval();
+        }
+        catch (Parser::exception_type &e)
+        {
+              qDebug()<<QString::fromStdString(linexpr)<<QString::fromStdString(e.GetMsg());
+          return false;
+        }
         break;
     }
     case DiagramItem::IO:
@@ -279,6 +333,9 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
 }
 
 bool DiagramScene::check() {
+    parser.ClearVar();
+    vardefined.clear();
+    varvalue.clear();
     DiagramItem *start = nullptr;
     for (QGraphicsItem *item : items()) {     //Находим начальный узел, заодно проверяем его единственность
         if (dynamic_cast<DiagramItem*>(item)) {

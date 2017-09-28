@@ -7,6 +7,10 @@
 #include <QLabel>
 #include <QStatusBar>
 #include <map>
+#include <string>
+#include "muParser.h"
+using namespace std;
+using namespace mu;
 
 class DiagramScene : public QGraphicsScene
 {
@@ -30,6 +34,9 @@ private:
     void addSelectedArrow();
     int calcnumber();
     std::map<DiagramItem*, bool> used;
+    Parser parser;
+    map<string, double> varvalue;
+    map<string, bool> vardefined;
 
 public slots:
     void addStartEndItem();
