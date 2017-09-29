@@ -1,0 +1,65 @@
+16
+arrow
+8 1
+$NO_TEXT$
+arrow
+4 8
+false
+arrow
+6 4
+$NO_TEXT$
+arrow
+7 6
+$NO_TEXT$
+arrow
+4 7
+true
+arrow
+5 4
+$NO_TEXT$
+arrow
+3 5
+$NO_TEXT$
+arrow
+2 3
+$NO_TEXT$
+item
+8
+IO
+286 453
+print sum
+item
+7
+IO
+743 454
+read x
+item
+6
+Step
+742 583
+sum = sum + x
+item
+5
+Step
+498 271
+i = 0
+item
+4
+Conditional
+497 378
+i < N
+item
+3
+IO
+498 164
+read N
+item
+2
+StartEnd
+498 58
+begin
+item
+1
+StartEnd
+286 571
+end

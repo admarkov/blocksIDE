@@ -306,7 +306,9 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
     }
     case DiagramItem::Conditional:
     {
-        if (item->outArrow1==nullptr && item->outArrow2==nullptr)
+        if (item->outArrow1==nullptr || item->outArrow2==nullptr)
+            return false;
+        if (item->outArrow1->Text()!="true" && item->outArrow2->Text()!="true" || item->outArrow1->Text()!="false" && item->outArrow2->Text()!="false")
             return false;
         string linexpr = item->Text().toStdString();
         for (int i=0; i<linexpr.length(); i++) {
@@ -479,7 +481,9 @@ void DiagramScene::runDFS() {
                 W->updatevar(var, d);
             }
             else {
+                DFSItem = nullptr;
                 selectStatus(Normal);
+                return;
             }
         }
         else {
