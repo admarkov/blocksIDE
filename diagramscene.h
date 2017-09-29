@@ -25,6 +25,7 @@ public:
     Arrow *editingArrow;
     bool check();
     void run();
+    void runDFS();
 
 private:
     bool check_dfs(DiagramItem *item);
@@ -37,6 +38,7 @@ private:
     Parser parser;
     map<string, double> varvalue;
     map<string, bool> vardefined;
+    DiagramItem *DFSItem;
 
 public slots:
     void addStartEndItem();

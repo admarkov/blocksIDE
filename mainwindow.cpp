@@ -181,6 +181,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     if (event->key()==Qt::Key_Escape && scene->status!=DiagramScene::RunningManual && scene->status!=DiagramScene::RunningAuto) {
         scene->selectStatus(DiagramScene::Normal);
     }
+    if (event->key()==Qt::Key_Space && scene->status==DiagramScene::RunningManual) {
+        scene->runDFS();
+    }
 }
 
 void MainWindow::deleteArrowAction() {
@@ -371,6 +374,27 @@ void MainWindow::runManual() {
 
 void MainWindow::stopRunning() {
     scene->selectStatus(DiagramScene::Normal);
+}
+
+void MainWindow::updatevar(string varname, double varvalue) {
+    QString var = QString::fromStdString(varname);
+    QString val = QString::number(varvalue);
+    bool isUpdated = false;
+    for (int i=0; i<varTable->rowCount(); i++) {
+        if (varTable->item(i,0)->text() == var) {
+            varTable->item(i,1)->setText(val);
+            isUpdated = true;
+            break;
+        }
+    }
+    if (!isUpdated) {
+        varTable->insertRow(varTable->rowCount());
+        qDebug()<<QString::number(varTable->rowCount());
+        varTable->setItem(varTable->rowCount()-1, 0, new QTableWidgetItem);
+        varTable->setItem(varTable->rowCount()-1, 1, new QTableWidgetItem);
+        varTable->item(varTable->rowCount()-1, 0)->setText(var);
+        varTable->item(varTable->rowCount()-1, 1)->setText(val);
+    }
 }
 
 MainWindow::~MainWindow()

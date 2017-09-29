@@ -14,6 +14,8 @@
 #include <QFile>
 #include <QTableWidget>
 #include "diagramscene.h"
+#include <string>
+using namespace std;
 
 class MainWindow : public QMainWindow
 {
@@ -79,6 +81,8 @@ public:
 
     QFile *File;
     bool unsavedChanges;
+
+    void updatevar(string varname, double varvalue);
 
 protected:
     void closeEvent(QCloseEvent *e);

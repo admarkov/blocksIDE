@@ -144,6 +144,11 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
         W->editorbtn->hide();
         W->varTable->hide();
         W->view->setGeometry(0,0, W->w, W->h-45);
+        for (QGraphicsItem *it : items()) {
+            DiagramItem* item = dynamic_cast<DiagramItem*>(it);
+            if (item!=nullptr)
+                item->setBrush(Qt::white);
+        }
         if (check()) {
             W->menuRun->setEnabled(true);
             W->menuRun_auto->setEnabled(true);
@@ -362,6 +367,87 @@ bool DiagramScene::check() {
     return true;
 }
 
-void DiagramScene::run() {
+void DiagramScene::runDFS() {
+    DFSItem->setBrush(Qt::white);
+    switch(DFSItem->diagramType()) {
 
+    case DiagramItem::StartEnd:
+    {
+        if (DFSItem->Text()==QString("begin"))
+            DFSItem = DFSItem->outArrow1->EndItem;
+        else
+            DFSItem = nullptr;
+        break;
+    }
+    case DiagramItem::Step:
+    {
+        QStringList lines = DFSItem->Text().split('\n');
+        for (QString line : lines) {
+            string varname = line.split('=')[0].toStdString();
+            for (int i=0; i<varname.length(); i++) {
+                if (isspace(varname[i]))
+                {
+                    varname.erase(i,1);
+                    i--;
+                }
+            }
+            string linexpr = line.split('=')[1].toStdString();
+            for (int i=0; i<linexpr.length(); i++) {
+                if (isspace(linexpr[i]))
+                {
+                    linexpr.erase(i,1);
+                    i--;
+                }
+            }
+            if (!vardefined[varname]) {
+                vardefined[varname] = true;
+                parser.DefineVar(varname, &varvalue[varname]);
+            }
+            parser.SetExpr(linexpr);
+            varvalue[varname] = parser.Eval();
+            MainWindow *W = (MainWindow*)(w);
+            W->updatevar(varname, varvalue[varname]);
+        }
+        DFSItem = DFSItem->outArrow1->EndItem;
+        break;
+    }
+    case DiagramItem::Conditional:
+    {
+
+        break;
+    }
+    case DiagramItem::IO:
+    {
+
+        break;
+    }
+
+    }
+
+    if (DFSItem!=nullptr)
+        DFSItem->setBrush(Qt::yellow);
+    if (DFSItem == nullptr) {
+        selectStatus(Normal);
+        return;
+    }
+}
+
+void DiagramScene::run() {
+    parser.ClearVar();
+    vardefined.clear();
+    varvalue.clear();
+    DiagramItem *start = nullptr;
+    for (QGraphicsItem *item : items()) {
+        if (dynamic_cast<DiagramItem*>(item)) {
+            DiagramItem *it = dynamic_cast<DiagramItem*>(item);
+            if (it->diagramType() == DiagramItem::StartEnd && it->Text()=="begin") {
+                    start = it;
+                    break;
+            }
+        }
+    }
+    used.clear();
+    used[nullptr] = true;
+    DFSItem = start;
+    start->setBrush(Qt::yellow);
 }
