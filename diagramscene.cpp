@@ -2,6 +2,9 @@
 #include "mainwindow.h"
 #include "arrow.h"
 #include <QDebug>
+#include <QtGui>
+#include <QInputDialog>
+#include <QMessageBox>
 
 DiagramScene::DiagramScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -329,6 +332,28 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
     {
         if (item->outArrow1==nullptr && item->outArrow2==nullptr)
             return false;
+        QStringList lines = item->Text().split('\n');
+        for (QString line : lines) {
+            if (line.indexOf("read")==0) {
+                string var = line.toStdString();
+                var.erase(0,5);
+                if (!vardefined[var]) {
+                    vardefined[var] = true;
+                    parser.DefineVar(var, &varvalue[var]);
+                }
+            }
+            else if (line.indexOf("print")==0){
+                string var = line.toStdString();
+                var.erase(0,6);
+                if (!vardefined[var]) {
+                    vardefined[var] = true;
+                    parser.DefineVar(var, &varvalue[var]);
+                }
+            }
+            else {
+                return false;
+            }
+        }
         break;
     }
 
@@ -413,12 +438,63 @@ void DiagramScene::runDFS() {
     }
     case DiagramItem::Conditional:
     {
-
+        parser.SetExpr(DFSItem->Text().toStdString());
+        if (parser.Eval()) {
+            if (DFSItem->outArrow1->Text()=="true")
+                DFSItem = DFSItem->outArrow1->EndItem;
+            else
+                DFSItem = DFSItem->outArrow2->EndItem;
+        }
+        else {
+            if (DFSItem->outArrow1->Text()=="false")
+                DFSItem = DFSItem->outArrow1->EndItem;
+            else
+                DFSItem = DFSItem->outArrow2->EndItem;
+        }
         break;
     }
     case DiagramItem::IO:
     {
-
+        QStringList lines = DFSItem->Text().split('\n');
+        for (QString line : lines) {
+        if (line.indexOf("read")==0) {
+            bool ok;
+            string var = line.toStdString();
+            var.erase(0,5);
+            while (var.front()==' ')
+                var.erase(0,1);
+            while (var.back()==' ')
+                var.erase(var.length()-1, 1);
+            double d = QInputDialog::getDouble(dynamic_cast<QWidget*>(this),
+                                      QString::fromUtf8("Введите значение переменной"),
+                                      QString::fromUtf8((var+": ").c_str()),
+                                      0.00, -100000, 100000, 6, &ok);
+            if (ok){
+                if (!vardefined[var]) {
+                    vardefined[var] = true;
+                    parser.DefineVar(var, &varvalue[var]);
+                }
+                varvalue[var] = d;
+                MainWindow *W = (MainWindow*)(w);
+                W->updatevar(var, d);
+            }
+            else {
+                selectStatus(Normal);
+            }
+        }
+        else {
+            string var = line.toStdString();
+            var.erase(0,6);
+            while (var.front()==' ')
+                var.erase(0,1);
+            while (var.back()==' ')
+                var.erase(var.length()-1, 1);
+            QMessageBox::information(dynamic_cast<QWidget*>(this),
+                                   QString::fromUtf8("Значение переменной"),
+                                   QString::fromStdString(var+": ")+QString::number(varvalue[var]));
+        }
+        }
+        DFSItem = DFSItem->outArrow1->EndItem;
         break;
     }
 
