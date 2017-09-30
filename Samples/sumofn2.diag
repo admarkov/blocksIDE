@@ -51,9 +51,8 @@ i = 0
 item
 6
 Step
-742 583
-sum = sum + x
-i=i + 1
+743 583
+sum = sum + x;i= i + 1
 item
 7
 IO

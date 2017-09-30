@@ -212,7 +212,7 @@ void MainWindow::saveDiagram() {
             if (it->diagramType()==DiagramItem::Step)
                 file<<"Step\n";
             file<<it->pos().x()<<" "<<it->pos().y()<<"\n";
-            file<<(it->Text().isEmpty()?"$NO_TEXT$":it->Text())<<"\n";
+            file<<(it->Text().isEmpty()?"$NO_TEXT$":it->Text().replace("\n", ";"))<<"\n";
         }
         else if (dynamic_cast<Arrow*>(item)) {
             Arrow *ar = dynamic_cast<Arrow*>(item);
@@ -300,7 +300,7 @@ void MainWindow::openDiagram() {
                 line = file.readLine();
                 x = line.split(" ").at(0).toDouble();
                 y = line.split(" ").at(1).toDouble();
-                text = file.readLine();
+                text = file.readLine().replace(";", "\n");
                 DiagramItem *item;
                 if (type=="StartEnd")
                     item = new DiagramItem(DiagramItem::StartEnd,n);
