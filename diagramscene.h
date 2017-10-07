@@ -25,9 +25,7 @@ public:
     Arrow *editingArrow;
     bool check();
     void run();
-    void runDFS();
 
-private:
     bool check_dfs(DiagramItem *item);
     void addDiagramItem(DiagramItem *item);
     QObject *w;
@@ -51,5 +49,8 @@ public slots:
     void addArrow();
     void arrowClicked(Arrow *arrow);
 };
+
+void autoDFS(DiagramScene* scene);
+void runDFS(DiagramScene *scene);
 
 #endif // DIAGRAMSCENE_H

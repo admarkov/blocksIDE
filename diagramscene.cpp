@@ -5,6 +5,8 @@
 #include <QtGui>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <thread>
+#include <unistd.h>
 
 DiagramScene::DiagramScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -193,10 +195,11 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
             W->menuRun_manual->setEnabled(false);
             W->menuRun_stop->setEnabled(true);
             W->view->setGeometry(0,0, W->w-280, W->h-45);
-            run();
         }
     }
     status = newStatus;
+    if (newStatus==RunningAuto || newStatus==RunningManual)
+        run();
 }
 
 void DiagramScene::onTextEdited(QString text) {
@@ -394,21 +397,29 @@ bool DiagramScene::check() {
     return true;
 }
 
-void DiagramScene::runDFS() {
-    DFSItem->setBrush(Qt::white);
-    switch(DFSItem->diagramType()) {
+void autoDFS(DiagramScene *scene) {
+    int cnt=0;
+    for (int i=0; i<5e8; i++)
+        cnt++;
+    thread th(runDFS, scene);
+    th.detach();
+}
+
+void runDFS(DiagramScene* scene) {
+    scene->DFSItem->setBrush(Qt::white);
+    switch(scene->DFSItem->diagramType()) {
 
     case DiagramItem::StartEnd:
     {
-        if (DFSItem->Text()==QString("begin"))
-            DFSItem = DFSItem->outArrow1->EndItem;
+        if (scene->DFSItem->Text()==QString("begin"))
+            scene->DFSItem = scene->DFSItem->outArrow1->EndItem;
         else
-            DFSItem = nullptr;
+            scene->DFSItem = nullptr;
         break;
     }
     case DiagramItem::Step:
     {
-        QStringList lines = DFSItem->Text().split('\n');
+        QStringList lines = scene->DFSItem->Text().split('\n');
         for (QString line : lines) {
             string varname = line.split('=')[0].toStdString();
             for (int i=0; i<varname.length(); i++) {
@@ -426,38 +437,38 @@ void DiagramScene::runDFS() {
                     i--;
                 }
             }
-            if (!vardefined[varname]) {
-                vardefined[varname] = true;
-                parser.DefineVar(varname, &varvalue[varname]);
+            if (!scene->vardefined[varname]) {
+                scene->vardefined[varname] = true;
+                scene->parser.DefineVar(varname, &scene->varvalue[varname]);
             }
-            parser.SetExpr(linexpr);
-            varvalue[varname] = parser.Eval();
-            MainWindow *W = (MainWindow*)(w);
-            W->updatevar(varname, varvalue[varname]);
+            scene->parser.SetExpr(linexpr);
+            scene->varvalue[varname] = scene->parser.Eval();
+            MainWindow *W = (MainWindow*)(scene->w);
+            W->updatevar(varname, scene->varvalue[varname]);
         }
-        DFSItem = DFSItem->outArrow1->EndItem;
+        scene->DFSItem = scene->DFSItem->outArrow1->EndItem;
         break;
     }
     case DiagramItem::Conditional:
     {
-        parser.SetExpr(DFSItem->Text().toStdString());
-        if (parser.Eval()) {
-            if (DFSItem->outArrow1->Text()=="true")
-                DFSItem = DFSItem->outArrow1->EndItem;
+        scene->parser.SetExpr(scene->DFSItem->Text().toStdString());
+        if (scene->parser.Eval()) {
+            if (scene->DFSItem->outArrow1->Text()=="true")
+                scene->DFSItem = scene->DFSItem->outArrow1->EndItem;
             else
-                DFSItem = DFSItem->outArrow2->EndItem;
+                scene->DFSItem = scene->DFSItem->outArrow2->EndItem;
         }
         else {
-            if (DFSItem->outArrow1->Text()=="false")
-                DFSItem = DFSItem->outArrow1->EndItem;
+            if (scene->DFSItem->outArrow1->Text()=="false")
+                scene->DFSItem = scene->DFSItem->outArrow1->EndItem;
             else
-                DFSItem = DFSItem->outArrow2->EndItem;
+                scene->DFSItem = scene->DFSItem->outArrow2->EndItem;
         }
         break;
     }
     case DiagramItem::IO:
     {
-        QStringList lines = DFSItem->Text().split('\n');
+        QStringList lines = scene->DFSItem->Text().split('\n');
         for (QString line : lines) {
         if (line.indexOf("read")==0) {
             bool ok;
@@ -467,22 +478,22 @@ void DiagramScene::runDFS() {
                 var.erase(0,1);
             while (var.back()==' ')
                 var.erase(var.length()-1, 1);
-            double d = QInputDialog::getDouble(dynamic_cast<QWidget*>(this),
+            double d = QInputDialog::getDouble(dynamic_cast<QWidget*>(scene),
                                       QString::fromUtf8("Введите значение переменной"),
                                       QString::fromUtf8((var+": ").c_str()),
                                       0.00, -100000, 100000, 6, &ok);
             if (ok){
-                if (!vardefined[var]) {
-                    vardefined[var] = true;
-                    parser.DefineVar(var, &varvalue[var]);
+                if (!scene->vardefined[var]) {
+                    scene->vardefined[var] = true;
+                    scene->parser.DefineVar(var, &scene->varvalue[var]);
                 }
-                varvalue[var] = d;
-                MainWindow *W = (MainWindow*)(w);
+                scene->varvalue[var] = d;
+                MainWindow *W = (MainWindow*)(scene->w);
                 W->updatevar(var, d);
             }
             else {
-                DFSItem = nullptr;
-                selectStatus(Normal);
+                scene->DFSItem = nullptr;
+                scene->selectStatus(DiagramScene::Normal);
                 return;
             }
         }
@@ -493,21 +504,28 @@ void DiagramScene::runDFS() {
                 var.erase(0,1);
             while (var.back()==' ')
                 var.erase(var.length()-1, 1);
-            QMessageBox::information(dynamic_cast<QWidget*>(this),
+            QMessageBox::information(dynamic_cast<QWidget*>(scene),
                                    QString::fromUtf8("Значение переменной"),
-                                   QString::fromStdString(var+": ")+QString::number(varvalue[var]));
+                                   QString::fromStdString(var+": ")+QString::number(scene->varvalue[var]));
         }
         }
-        DFSItem = DFSItem->outArrow1->EndItem;
+        scene->DFSItem = scene->DFSItem->outArrow1->EndItem;
         break;
     }
 
     }
 
-    if (DFSItem!=nullptr)
-        DFSItem->setBrush(Qt::yellow);
-    if (DFSItem == nullptr) {
-        selectStatus(Normal);
+    if (scene->DFSItem!=nullptr) {
+        scene->DFSItem->setBrush(Qt::yellow);
+        if (scene->status==DiagramScene::RunningAuto) {
+                int time = 0;
+                for (int i=0; i<5e8; i++)
+                    time++;
+                runDFS(scene);
+            }
+    }
+    else {
+        scene->selectStatus(DiagramScene::Normal);
         return;
     }
 }
@@ -530,4 +548,8 @@ void DiagramScene::run() {
     used[nullptr] = true;
     DFSItem = start;
     start->setBrush(Qt::yellow);
+    if (status==RunningAuto) {
+        std::thread th(autoDFS, this);
+        th.detach();
+    }
 }
