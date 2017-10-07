@@ -182,7 +182,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
         scene->selectStatus(DiagramScene::Normal);
     }
     if (event->key()==Qt::Key_Space && scene->status==DiagramScene::RunningManual) {
-        runDFS(scene);
+        scene->runDFS();
     }
 }
 
