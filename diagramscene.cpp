@@ -554,6 +554,8 @@ void DiagramScene::run() {
     used[nullptr] = true;
     DFSItem = start;
     start->setBrush(Qt::yellow);
+    ((QWidget*)(w))->repaint();
+    ((MainWindow*)w)->view->viewport()->repaint();
     if (status==RunningAuto) {
         waitASecond();
         runDFS();
