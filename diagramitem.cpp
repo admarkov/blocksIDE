@@ -56,6 +56,16 @@ void DiagramItem::redraw() {
             }
         hw+=std::max(0,maxlinelen-12)*5;
     }
+    else if (diagramType()==Step) {
+        int maxlinelen=0;
+        int newlinepos=0;
+        for (int i=0; i<Text().length(); i++) {
+                maxlinelen=std::max(maxlinelen, i-newlinepos);
+                if (Text()[i]=='\n')
+                    newlinepos=i;
+            }
+        hw+=std::max(0,maxlinelen-14)*3;
+    }
     else {
         hw+=std::max(0,Text().length()-14)*3;
     }
