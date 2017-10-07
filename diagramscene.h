@@ -39,6 +39,10 @@ private:
     map<string, double> varvalue;
     map<string, bool> vardefined;
     DiagramItem *DFSItem;
+    void waitASecond();
+
+signals:
+    void DFSMagicSignal();
 
 public slots:
     void addStartEndItem();
@@ -50,6 +54,7 @@ public slots:
     void onTextEdited(QString text);
     void addArrow();
     void arrowClicked(Arrow *arrow);
+    void DFSMagicSlot();
 };
 
 #endif // DIAGRAMSCENE_H

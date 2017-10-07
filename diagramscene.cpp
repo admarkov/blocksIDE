@@ -18,6 +18,7 @@ void DiagramScene::addDiagramItem(DiagramItem *item) {
     addItem(item);
     connect(item, SIGNAL(positionChanged(DiagramItem*,QPointF)), this, SLOT(itemPositionChanged(DiagramItem*,QPointF)));
     connect(item, SIGNAL(clicked(DiagramItem*)), this, SLOT(itemClicked(DiagramItem*)));
+    connect(this, SIGNAL(DFSMagicSignal()), this, SLOT(DFSMagicSlot()));
 }
 
 int DiagramScene::calcnumber() {
@@ -139,6 +140,7 @@ void DiagramScene::arrowClicked(Arrow *arrow) {
 
 void DiagramScene::selectStatus(SceneStatus newStatus) {
     MainWindow *W = (MainWindow*)(w);
+    status = newStatus;
     if (newStatus == Normal) {
         W->menuFile->setEnabled(true);
         W->menuEdit->setEnabled(true);
@@ -195,8 +197,7 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
             W->view->setGeometry(0,0, W->w-280, W->h-45);
             run();
         }
-    }
-    status = newStatus;
+    }   
 }
 
 void DiagramScene::onTextEdited(QString text) {
@@ -396,6 +397,10 @@ bool DiagramScene::check() {
 
 void DiagramScene::runDFS() {
     DFSItem->setBrush(Qt::white);
+    emit DFSMagicSignal();
+    ((QWidget*)(w))->repaint();
+    ((MainWindow*)w)->view->viewport()->repaint();
+
     switch(DFSItem->diagramType()) {
 
     case DiagramItem::StartEnd:
@@ -498,6 +503,7 @@ void DiagramScene::runDFS() {
                                    QString::fromStdString(var+": ")+QString::number(varvalue[var]));
         }
         }
+
         DFSItem = DFSItem->outArrow1->EndItem;
         break;
     }
@@ -510,6 +516,24 @@ void DiagramScene::runDFS() {
         selectStatus(Normal);
         return;
     }
+    emit DFSMagicSignal();
+    ((QWidget*)(w))->repaint();
+    ((MainWindow*)w)->view->viewport()->repaint();
+
+    if (status==RunningAuto) {
+        waitASecond();
+        runDFS();
+    }
+}
+
+void DiagramScene::DFSMagicSlot() {
+    update();
+}
+
+void DiagramScene::waitASecond() {
+    int time = 0;
+    while (time<5e8)
+        time++;
 }
 
 void DiagramScene::run() {
@@ -530,4 +554,8 @@ void DiagramScene::run() {
     used[nullptr] = true;
     DFSItem = start;
     start->setBrush(Qt::yellow);
+    if (status==RunningAuto) {
+        waitASecond();
+        runDFS();
+    }
 }
