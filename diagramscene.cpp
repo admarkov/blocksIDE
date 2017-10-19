@@ -201,6 +201,7 @@ void DiagramScene::selectStatus(SceneStatus newStatus) {
 }
 
 void DiagramScene::onTextEdited(QString text) {
+    int pos = ((MainWindow*)w)->lineEditor->cursorPosition();
     if (editingItem!=nullptr) {
         if (editingItem->diagramType()==DiagramItem::StartEnd || editingItem->diagramType()==DiagramItem::Conditional) {
             ((MainWindow*)w)->lineEditor->setText(text.replace(";",""));
@@ -224,6 +225,7 @@ void DiagramScene::onTextEdited(QString text) {
         ((MainWindow*)w)->lineEditor->setText(text.replace(";",""));
         editingArrow->textItem->setPlainText(text.replace(";", ""));
     }
+    ((MainWindow*)w)->lineEditor->setCursorPosition(pos);
 }
 
 void DiagramScene::addArrow() {

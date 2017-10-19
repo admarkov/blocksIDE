@@ -52,7 +52,7 @@ void Arrow::updatePosition()
 {
     QPointF startPoint, endPoint = QPointF(0,-(EndItem->height));
     if (StartItem->diagramType()==DiagramItem::Conditional) {
-        if (StartItem->outArrow1 == this)
+        if (EndItem->x() < StartItem->x())
             startPoint = QPointF(-(StartItem->width), 0);
         else
             startPoint = QPointF(StartItem->width, 0);
@@ -60,6 +60,10 @@ void Arrow::updatePosition()
     else {
         startPoint = QPointF(0, StartItem->height);
     }
+    if (EndItem->y() > StartItem->y())
+        endPoint = QPointF(0, -StartItem->height);
+    else
+        endPoint = QPointF(0, StartItem->height);
     QLineF line(mapFromItem(StartItem, startPoint), mapFromItem(EndItem, endPoint));
     setLine(line);
     qreal X = line.angle();
