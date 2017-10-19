@@ -342,6 +342,8 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
             if (line.indexOf("read")==0) {
                 string var = line.toStdString();
                 var.erase(0,5);
+                if (var.find(' ')<1000 || var.find('(')<1000 || var.find(')')<1000 || var.find('+')<1000 || var.find('-')<1000 || var.find('*')<1000 || var.find('/')<1000 || var.find('=')<1000)
+                    return false;
                 if (!vardefined[var]) {
                     vardefined[var] = true;
                     parser.DefineVar(var, &varvalue[var]);
@@ -350,6 +352,8 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
             else if (line.indexOf("print")==0){
                 string var = line.toStdString();
                 var.erase(0,6);
+                if (var.find(' ')<1000 || var.find('(')<1000 || var.find(')')<1000 || var.find('+')<1000 || var.find('-')<1000 || var.find('*')<1000 || var.find('/')<1000 || var.find('=')<1000)
+                    return false;
                 if (!vardefined[var]) {
                     vardefined[var] = true;
                     parser.DefineVar(var, &varvalue[var]);
