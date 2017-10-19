@@ -61,9 +61,9 @@ void Arrow::updatePosition()
         startPoint = QPointF(0, StartItem->height);
     }
     if (EndItem->y() > StartItem->y())
-        endPoint = QPointF(0, -StartItem->height);
+        endPoint = QPointF(0, -EndItem->height);
     else
-        endPoint = QPointF(0, StartItem->height);
+        endPoint = QPointF(0, EndItem->height);
     QLineF line(mapFromItem(StartItem, startPoint), mapFromItem(EndItem, endPoint));
     setLine(line);
     qreal X = line.angle();
