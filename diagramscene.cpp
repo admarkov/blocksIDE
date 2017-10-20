@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 DiagramScene::DiagramScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -244,6 +245,9 @@ void DiagramScene::addSelectedArrow() {
 }
 
 bool DiagramScene::check_dfs(DiagramItem *item) {
+
+    try {
+
     if (used[item])
         return true;
     used[item] = true;
@@ -366,6 +370,11 @@ bool DiagramScene::check_dfs(DiagramItem *item) {
         break;
     }
 
+    }
+
+    }
+    catch(mu::ParserError) {
+        return false;
     }
 
     return ((item->outArrow1==nullptr?true:check_dfs(item->outArrow1->EndItem)) && (item->outArrow2==nullptr?true:check_dfs(item->outArrow2->EndItem)));
@@ -527,13 +536,14 @@ void DiagramScene::runDFS() {
     ((MainWindow*)w)->view->viewport()->repaint();
 
     if (status==RunningAuto) {
-        waitASecond();
-        runDFS();
+        QTimer::singleShot(1000, this,SLOT(DFSMagicSlot()));
     }
 }
 
 void DiagramScene::DFSMagicSlot() {
-    update();
+    runDFS();
+    if (status==Normal)
+        selectStatus(Normal);
 }
 
 void DiagramScene::waitASecond() {
@@ -563,7 +573,6 @@ void DiagramScene::run() {
     ((QWidget*)(w))->repaint();
     ((MainWindow*)w)->view->viewport()->repaint();
     if (status==RunningAuto) {
-        waitASecond();
-        runDFS();
+        QTimer::singleShot(1000, this,SLOT(DFSMagicSlot()));
     }
 }

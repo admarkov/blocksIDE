@@ -1,0 +1,92 @@
+23
+arrow
+1 3
+$NO_TEXT$
+arrow
+3 2
+$NO_TEXT$
+arrow
+2 4
+$NO_TEXT$
+arrow
+4 8
+true
+arrow
+8 6
+$NO_TEXT$
+arrow
+6 7
+$NO_TEXT$
+arrow
+4 10
+false
+arrow
+10 11
+$NO_TEXT$
+arrow
+7 5
+true
+arrow
+7 9
+false
+arrow
+5 4
+$NO_TEXT$
+arrow
+9 4
+$NO_TEXT$
+item
+1
+StartEnd
+438 50
+begin
+item
+3
+IO
+437 173
+read n;read x
+item
+2
+Step
+436 299
+l = 1;r = n + 1
+item
+4
+Conditional
+437 416
+l < r
+item
+5
+Step
+525 930
+l = m + 1
+item
+6
+IO
+643 638
+print m;read a_m
+item
+7
+Conditional
+642 758
+a_m <= x
+item
+8
+Step
+644 520
+m = rint( (l + r - 1) / 2 )
+item
+9
+Step
+756 928
+r = m
+item
+10
+IO
+247 508
+print l
+item
+11
+StartEnd
+248 640
+end
