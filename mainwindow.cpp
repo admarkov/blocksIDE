@@ -260,6 +260,7 @@ void MainWindow::newDiagram() {
         scene->removeItem(item);
     }
     scene->setSceneRect(0,0,w,h-47);
+    scene->selectStatus(DiagramScene::Normal);
 }
 
 struct fileArrow {

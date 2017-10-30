@@ -396,6 +396,8 @@ bool DiagramScene::check() {
             }
         }
     }
+    if (start==nullptr)
+        return false;
     used.clear();
     used[nullptr] = true;
     if (!check_dfs(start))
