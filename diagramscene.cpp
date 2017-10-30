@@ -414,7 +414,6 @@ bool DiagramScene::check() {
 
 void DiagramScene::runDFS() {
     DFSItem->setBrush(Qt::white);
-    emit DFSMagicSignal();
     ((QWidget*)(w))->repaint();
     ((MainWindow*)w)->view->viewport()->repaint();
 
@@ -533,19 +532,12 @@ void DiagramScene::runDFS() {
         selectStatus(Normal);
         return;
     }
-    emit DFSMagicSignal();
     ((QWidget*)(w))->repaint();
     ((MainWindow*)w)->view->viewport()->repaint();
 
     if (status==RunningAuto) {
         QTimer::singleShot(1000, this,SLOT(DFSMagicSlot()));
     }
-}
-
-void DiagramScene::DFSMagicSlot() {
-    runDFS();
-    if (status==Normal)
-        selectStatus(Normal);
 }
 
 void DiagramScene::waitASecond() {

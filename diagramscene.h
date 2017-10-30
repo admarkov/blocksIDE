@@ -41,9 +41,6 @@ private:
     DiagramItem *DFSItem;
     void waitASecond();
 
-signals:
-    void DFSMagicSignal();
-
 public slots:
     void addStartEndItem();
     void addConditionalItem();
@@ -54,7 +51,6 @@ public slots:
     void onTextEdited(QString text);
     void addArrow();
     void arrowClicked(Arrow *arrow);
-    void DFSMagicSlot();
 };
 
 #endif // DIAGRAMSCENE_H
