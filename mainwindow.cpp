@@ -105,12 +105,12 @@ void MainWindow::setupUi()
     statusBar->addWidget(statusBar_message);
 
     lineEditor = new QLineEdit(this);
-    lineEditor->setGeometry(0,25,w-100,30);
+    lineEditor->setGeometry(0,20,w-99,30);
     lineEditor->setFont(QFont("Verdana", 12));
     connect(lineEditor, SIGNAL(textEdited(QString)), scene, SLOT(onTextEdited(QString)));
 
     editorbtn = new QPushButton(this);
-    editorbtn->setGeometry(w-100,25,100,30);
+    editorbtn->setGeometry(w-100,20,100,30);
     editorbtn->setText("Завершить");
     connect(editorbtn, SIGNAL(clicked(bool)), this, SLOT(resetSceneStatus()));
 
@@ -118,7 +118,7 @@ void MainWindow::setupUi()
     editorbtn->hide();
 
     varTable = new QTableWidget(this);
-    varTable->setGeometry(w-280, 25, 280, h-46);
+    varTable->setGeometry(w-280, 20, 280, h-45);
     varTable->setColumnCount(2);
     varTable->setColumnWidth(1, 140);
     QStringList tableHeader;

@@ -19,7 +19,6 @@ void DiagramScene::addDiagramItem(DiagramItem *item) {
     addItem(item);
     connect(item, SIGNAL(positionChanged(DiagramItem*,QPointF)), this, SLOT(itemPositionChanged(DiagramItem*,QPointF)));
     connect(item, SIGNAL(clicked(DiagramItem*)), this, SLOT(itemClicked(DiagramItem*)));
-    connect(this, SIGNAL(DFSMagicSignal()), this, SLOT(DFSMagicSlot()));
 }
 
 int DiagramScene::calcnumber() {
@@ -567,6 +566,10 @@ void DiagramScene::run() {
     ((QWidget*)(w))->repaint();
     ((MainWindow*)w)->view->viewport()->repaint();
     if (status==RunningAuto) {
-        QTimer::singleShot(1000, this,SLOT(DFSMagicSlot()));
+        QTimer::singleShot(1000, this, SLOT(DFSMagicSlot()));
     }
+}
+
+void DiagramScene::DFSMagicSlot() {
+    runDFS();
 }

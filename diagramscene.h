@@ -51,6 +51,7 @@ public slots:
     void onTextEdited(QString text);
     void addArrow();
     void arrowClicked(Arrow *arrow);
+    void DFSMagicSlot();
 };
 
 #endif // DIAGRAMSCENE_H

@@ -1,0 +1,49 @@
+12
+arrow
+1 3
+$NO_TEXT$
+arrow
+3 2
+$NO_TEXT$
+arrow
+2 4
+true
+arrow
+2 5
+false
+arrow
+5 2
+$NO_TEXT$
+arrow
+4 6
+$NO_TEXT$
+item
+1
+StartEnd
+589 150
+begin
+item
+2
+Conditional
+579 410
+b==0
+item
+3
+IO
+587 288
+read a;read b
+item
+4
+IO
+795 494
+print a
+item
+5
+Step
+397 543
+c = b-1;a = b;b = c
+item
+6
+StartEnd
+793 635
+end
